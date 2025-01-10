@@ -22,9 +22,10 @@ def train(cfg):
         max_epochs=cfg.model.hyperparameters['epochs'],
         #limit_train_batches=0.2,
         #callbacks=[early_stopping_callback],
-        #logger=pl.loggers.WandbLogger(project="Captcha"),
+        logger=pl.loggers.WandbLogger(project="Captcha"),
     )  # this is our Trainer
     trainer.fit(model, train_dataloader, validation_dataloader)
+    trainer.test(model, test_dataloader)
     #trainer.test(model, test_dataloader)
     torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
 

@@ -44,8 +44,8 @@ class Resnet18(pl.LightningModule):
         y_pred = self(img)
         loss = self.loss_fn(y_pred, target)
         acc = (target == y_pred.argmax(dim=-1)).float().mean()
-        self.log('train_loss', loss)
-        self.log('train_acc', acc)
+        self.log('train_loss', loss, on_epoch=True)
+        self.log('train_acc', acc, on_epoch=True)
         print(f"Train loss: {loss}, Train accuracy: {acc}")
         return loss
     
