@@ -32,7 +32,5 @@ line-length = 120
 omit = ["tests/*"]
 
 [project.scripts]
-data = "captcha.data:main"
 train = "captcha.train:main"
 evaluate = "captcha.evaluate:main"
-visualize = "captcha.visualize:main"
