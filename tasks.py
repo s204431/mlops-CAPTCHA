@@ -78,3 +78,4 @@ def git(ctx, file, m):
     ctx.run(f"git commit -m '{m}'")
     ctx.run(f"git push")
 
+
