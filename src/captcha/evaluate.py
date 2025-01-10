@@ -41,7 +41,7 @@ def load_dummy(): #Temporary function with dummy data
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
     return train_dataset, val_dataset, test_dataset
 
-@hydra.main(config_path="../../configs", config_name="default_config")
+@hydra.main(config_path="{_ROOT}/configs", config_name="default_config")
 def main(cfg):
     evaluate(cfg)
 
