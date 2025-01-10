@@ -13,7 +13,7 @@ class MyAwesomeModel(pl.LightningModule):
         super().__init__()
 
         # Create the ResNet18 model
-        self.model = timm.create_model('resnet18', pretrained=True)
+        self.model = timm.create_model('resnet18', pretrained=True, in_chans=1)
 
         # Freeze all parameters in the pretrained layers
         for param in self.model.parameters():
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     dataset = datasets.FakeData(
         size=1000,
-        image_size=(3, 224, 224),
+        image_size=(1, 224, 224),
         num_classes=10,
         transform=transform
     )
