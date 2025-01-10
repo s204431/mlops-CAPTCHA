@@ -1,19 +1,21 @@
 import torch
 #from captcha.dataloader import load_data
-from captcha.model import MyAwesomeModel
+from captcha.model import Resnet18
+from captcha.dataloader import load_data
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping
 from torch.utils.data import DataLoader, random_split, TensorDataset
 from torchvision import transforms
 import torchvision.datasets as datasets
+from captcha import _ROOT
 
 def train():
-    #train_set, validation_set, test_set = load_data()
-    train_set, validation_set, test_set = load_dummy()
+    train_set, validation_set, test_set = load_data()
+    #train_set, validation_set, test_set = load_dummy()
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True)
     validation_dataloader = torch.utils.data.DataLoader(validation_set, batch_size=32)
     test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=32)
-    model = MyAwesomeModel()  # this is our LightningModule
+    model = Resnet18()  # this is our LightningModule
     #early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
     trainer = Trainer(
         max_epochs=2,
@@ -23,18 +25,19 @@ def train():
     )  # this is our Trainer
     trainer.fit(model, train_dataloader, validation_dataloader)
     #trainer.test(model, test_dataloader)
+    torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
 
 
 def load_dummy(): #Temporary function with dummy data
     # Dummy Dataset (Replace with your real dataset)
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize((52, 32)),
         transforms.ToTensor()
     ])
 
     dataset = datasets.FakeData(
         size=1000,
-        image_size=(1, 224, 224),
+        image_size=(1, 52, 32),
         num_classes=10,
         transform=transform
     )
