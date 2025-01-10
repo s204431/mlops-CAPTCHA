@@ -8,7 +8,7 @@ For our project we use the [*CAPTCHA Characters Dataset*](https://www.kaggle.com
 
 Here’s an example of a CAPTCHA image from our dataset:
 
-![Example CAPTCH.](data/raw/2_10067.png)
+![Example CAPTCH.](reports/figures/2_10067.png)
 
 For now the data was loaded manually, using less than one gigabyte, but we will later implement the downloading process in the [data.py](src/captcha/data.py) and save the data using version control.
 
