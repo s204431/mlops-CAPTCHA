@@ -6,7 +6,10 @@ from torch.utils.data import Dataset
 from PIL import Image
 import torchvision.transforms as transforms
 import kagglehub
+import gdown
 from captcha import _ROOT
+import zipfile
+import os
 
 
 class MyDataset(Dataset):
@@ -127,12 +130,29 @@ class MyDataset(Dataset):
 def preprocess() -> None:
 #TODO FIX DOWNLOAD 
 
+    # use wget and download the following dataset into a folder data/test 
+
+
 
 #    print("Downloading dataset from Kaggle...")
-    kaggle_path_str = kagglehub.dataset_download("tahabakhtari/captcha-characters-dataset-118k-images")
-    kaggle_path = Path(kaggle_path_str)
+    #kaggle_path_str = kagglehub.dataset_download("tahabakhtari/captcha-characters-dataset-118k-images")
+    #kaggle_path = Path(kaggle_path_str)
 #
-#    print("Path to downloaded dataset files:", kaggle_path)
+
+    print("Downloading dataset from Google Drive...")
+    os.makedirs("data/test", exist_ok=True)
+    gdown.download("https://drive.google.com/uc?id=1HyOhjM2WgmRucD-czc3UzTaFBAtx7-ae", "data/test/dataset.zip", quiet=False)
+    
+    print("Extracting dataset...")
+    with zipfile.ZipFile("data/test/dataset.zip", 'r') as zip_ref:
+        zip_ref.extractall("data/test")
+    
+    # Clean up the zip file
+    os.remove("data/test/dataset.zip")
+    print("Dataset extracted and zip file removed")
+
+
+    #print("Path to downloaded dataset files:", kaggle_path)
 #    print("Preprocessing data...")
 #
 #    raw_data_folder = Path("data/raw")
@@ -143,10 +163,10 @@ def preprocess() -> None:
 #
 #
 #    print("Path to downloaded dataset files:", kaggle_path)
-    print("Preprocessing data...")
-    raw_data_path = Path("data/raw")
-    dataset = MyDataset(raw_data_path)
-    dataset.preprocess(Path("data/processed"))
+    #print("Preprocessing data...")
+    #raw_data_path = Path("data/raw")
+    #dataset = MyDataset(raw_data_path)
+    #dataset.preprocess(Path("data/processed"))
 
 
 if __name__ == "__main__":
@@ -169,3 +189,6 @@ def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, tor
     validation_set = torch.utils.data.TensorDataset(train_images, train_target)
     test_set = torch.utils.data.TensorDataset(test_images, test_target)
     return train_set, validation_set, test_set
+
+
+
