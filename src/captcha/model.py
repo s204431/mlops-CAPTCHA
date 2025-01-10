@@ -56,7 +56,7 @@ class Resnet18(pl.LightningModule):
 def main(cfg):
 
     # Initialize the model
-    model = Resnet18()
+    model = Resnet18(cfg.optimizer.Adam_opt)
 
     # Dummy Dataset (Replace with your real dataset)
     transform = transforms.Compose([
