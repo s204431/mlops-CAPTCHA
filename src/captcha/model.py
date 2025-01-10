@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 import torch
 from torch import nn
 import timm
+import wandb
 from torch.utils.data import DataLoader, random_split, TensorDataset
 from torchvision import transforms
 import torchvision.datasets as datasets
@@ -39,14 +40,16 @@ class MyAwesomeModel(pl.LightningModule):
         img, target = batch
         y_pred = self(img)
         loss = self.loss_fn(y_pred, target)
-        print("train_loss", loss) #REPLACE WITH WEIGHTB
+        acc = (target == y_pred.argmax(dim=-1)).float().mean()
+        self.log('train_loss', loss)
+        self.log('train_acc', acc)
         return loss
 
     def configure_optimizers(self):
         """Configure optimizer."""
         return torch.optim.Adam(self.parameters(), lr=1e-3)
 
-if __name__ == "__main__":
+def main():
     # Initialize the model
     model = MyAwesomeModel()
 
@@ -76,7 +79,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=32)
 
     # Initialize PyTorch Lightning Trainer
-    trainer = pl.Trainer(max_epochs=10)
+    trainer = pl.Trainer(max_epochs=10, logger=pl.loggers.WandbLogger(project="Captcha"))
 
     # Train the model
     trainer.fit(model, train_loader, val_loader)
@@ -93,3 +96,6 @@ if __name__ == "__main__":
 
     #for name, param in model.named_parameters():
     #    print(f"{name}: {'Trainable' if param.requires_grad else 'Frozen'}")
+
+if __name__ == "__main__":
+    main()
