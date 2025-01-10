@@ -2,6 +2,30 @@
 
 CAPTCHA project for DTU MLOps course
 
+## Introduction
+This is an introduction to our project. (maybe merge with "captcha")
+
+## Project goal
+Here we state our goal by saying what the problem is, what we want to achieve and how we will measure that.
+
+## Data
+Here we can describe/explain the data.
+
+## Model
+Here we talk about our model that we use.
+
+## Frameworks and tTools (maybe)
+Here we list the frameworks and tools that we use and maybe explain some important ones.
+
+## Setup and installation (important)
+Here we describe how to setup the project to reproduce our results.
+
+## Progress (maybe)
+Maybe a section to keep track of our progress.
+
+## Future steps (maybe)
+The next steps.
+
 ## Project structure
 
 The directory structure of the project looks like this:
