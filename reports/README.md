@@ -52,22 +52,22 @@ will check the repositories and the code to verify your answers.
 * [x] Make sure that all team members have write access to the GitHub repository (M5)
 * [x] Create a dedicated environment for you project to keep track of your packages (M2)
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
+* [x] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) - Petr
 * [x] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
 * [x] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) - Jens
+* [ ] Do a bit of code typing and remember to document essential parts of your code (M7) - Jens
 * [ ] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [x] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
+* [x] Construct one or multiple docker files for your code (M10) - Michael
+* [ ] Build the docker files locally and make sure they work as intended (M10) - Michael
 * [x] Write one or multiple configurations files for your experiments (M11)
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
+* [ ] Use profiling to optimize your code (M12) - Jone
+* [ ] Use logging to log important events in your code (M14) - Petr
+* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14) - Michael, Mads
+* [ ] Consider running a hyperparameter optimization sweep (M14) - Mads
 * [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
