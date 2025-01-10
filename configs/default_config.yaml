@@ -1,3 +1,4 @@
 defaults:
-- model: resnet18
-- optimizer: Adam
+- model: model
+- optimizer: Adam_opt
+
