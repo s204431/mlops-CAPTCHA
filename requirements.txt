@@ -10,3 +10,5 @@ invoke==2.2.0
 opendatasets==0.1.22
 pandas==2.2.3
 numpy==1.26.4
+coverage==7.6.10
+pytest==8.3.4
