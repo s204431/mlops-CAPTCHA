@@ -2,20 +2,18 @@
 
 import torch
 
-test_data = torch.load("data/processed/class_names.pt")
-print(test_data)
+# Load the test images and labels
+test_images = torch.load("data/processed/test_images.pt")
+test_labels = torch.load("data/processed/test_labels.pt")
+# Display the images and labels
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# display th efirst image 
+
+plt.imshow(test_images[1].permute(1, 2, 0), cmap='gray')
+plt.title(test_labels[1])
+plt.show()
 
 
-# plot one image and label 
-
-#import matplotlib.pyplot as plt
-
-#image, label = test_data[0]
-#plt.imshow(image.permute(1, 2, 0))
-#plt.title(label)
-
-#print("Label:", label)
-#plt.show()
-
-
-#print("Image size:", image.size())

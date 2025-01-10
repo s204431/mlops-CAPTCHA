@@ -12,3 +12,4 @@ pandas==2.2.3
 numpy==1.26.4
 coverage==7.6.10
 pytest==8.3.4
+kagglehub==0.3.6
