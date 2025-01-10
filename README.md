@@ -1,11 +1,11 @@
 # CAPTCHA solving CNN
 
-In this project we want to develop a Convolutional Neural Network (CNN) to solve CAPTCHAs, as they are often used to differentiate between humans and machines. On the other hand we also want to create a structure in this project that can be used as a template for further projects in machine learning.
+In this project we want to develop a deep learning model based on Convolutional Neural Networks to solve CAPTCHAs, as they are often used to differentiate between humans and machines. In addition to this we want to create a structure in this project that can be used as a template for further projects in machine learning.
 
-We are using the *[PyTorch Image Models (timm)](https://github.com/rwightman/pytorch-image-models)* framework, which is a library containing for example different image models, where we make use of the pretrained *resnet18* as the model of choice for our project.
+We are using the *[PyTorch Image Models (timm)](https://github.com/rwightman/pytorch-image-models)* framework, which is a library containing for example different models applicable for image classification. We make use of the pretrained *resnet18* as the model of choice for our project. This model is not too complex model that should be enough for this project.
 
 
-For our project we use the [*CAPTCHA Characters Dataset*](https://www.kaggle.com/datasets/tahabakhtari/captcha-characters-dataset-118k-images) published by Taha Bakhtari on kaggle. It covers over 118.000 black-and-white images of letters and digits from CAPTCHAs with an image size of 52x32 pixel.
+For our project we use the [*CAPTCHA Characters Dataset*](https://www.kaggle.com/datasets/tahabakhtari/captcha-characters-dataset-118k-images) published by Taha Bakhtari on kaggle. It covers over 118.000 black-and-white images of letters and digits from CAPTCHAs with an image size of 52x32 pixel. The dataset contains images of 20 different CAPTCHA characters being various digits and letters. This gives rise to an image classification problem with 20 classes.
 Here’s an example of a CAPTCHA image from our dataset:
 ![Example CAPTCH.](data/raw/2_10067.png)
 
