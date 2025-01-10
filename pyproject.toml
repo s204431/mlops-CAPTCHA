@@ -30,3 +30,9 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+data = "captcha.data:main"
+train = "captcha.model:main"
+evaluate = "captcha.evaluate:main"
+visualize = "captcha.visualize:main"
