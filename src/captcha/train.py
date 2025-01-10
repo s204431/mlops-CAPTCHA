@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader, random_split, TensorDataset
 from torchvision import transforms
 import torchvision.datasets as datasets
 from captcha import _ROOT
+from torch.profiler import profile, tensorboard_trace_handler
 
 def train(cfg):
     train_set, validation_set, test_set = load_data()
