@@ -12,8 +12,10 @@ from hydra.utils import instantiate
 class Resnet18(pl.LightningModule):
     """My awesome model."""
 
-    def __init__(self, num_classes: int = 20) -> None:
+    def __init__(self, optimimzer_cfg, num_classes: int = 20) -> None:
         super().__init__()
+
+        self.optimizer_cfg = optimimzer_cfg
 
         # Create the ResNet18 model
         self.model = timm.create_model('resnet18', pretrained=True, in_chans=1)
@@ -48,18 +50,13 @@ class Resnet18(pl.LightningModule):
 
     def configure_optimizers(self):
         """Configure optimizer."""
-        return torch.optim.Adam(self.parameters(), lr=1e-3)
+        return hydra.utils.instantiate(self.optimizer_cfg, params=self.parameters())
 
 @hydra.main(config_path="../../configs", config_name="default_config")
 def main(cfg):
-    print(cfg)
-    print(instantiate(cfg.optimizer.Adam))
-    
+
     # Initialize the model
     model = Resnet18()
-
-    # Print model architecture
-    print(f"Model architecture: {model}")
 
     # Dummy Dataset (Replace with your real dataset)
     transform = transforms.Compose([
@@ -84,15 +81,13 @@ def main(cfg):
     val_loader = DataLoader(val_dataset, batch_size=32)
 
     # Initialize PyTorch Lightning Trainer
-    trainer = pl.Trainer(max_epochs=10, logger=pl.loggers.WandbLogger(project="Captcha"))
+    trainer = pl.Trainer(max_epochs=10) #, logger=pl.loggers.WandbLogger(project="Captcha"))
 
     # Train the model
     trainer.fit(model, train_loader, val_loader)
 
-
-
-if __name__ == "__main__":
-    main()
+    # Print model architecture
+    #print(f"Model architecture: {model}")
 
     #print(f"Model architecture: {model}")
     #print(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
