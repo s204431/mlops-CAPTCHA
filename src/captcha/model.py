@@ -6,11 +6,13 @@ import wandb
 from torch.utils.data import DataLoader, random_split, TensorDataset
 from torchvision import transforms
 import torchvision.datasets as datasets
+import hydra
+from hydra.utils import instantiate
 
-class MyAwesomeModel(pl.LightningModule):
+class Resnet18(pl.LightningModule):
     """My awesome model."""
 
-    def __init__(self) -> None:
+    def __init__(self, num_classes: int = 20) -> None:
         super().__init__()
 
         # Create the ResNet18 model
@@ -21,8 +23,7 @@ class MyAwesomeModel(pl.LightningModule):
             param.requires_grad = False
 
         # Replace the final fully connected layer with your custom layer
-        num_features = self.model.fc.in_features                 
-        num_classes = 10                                        
+        num_features = self.model.fc.in_features                                                        
         self.model.fc = nn.Linear(num_features, num_classes)
 
         # Ensure the new fc layer's parameters are trainable
@@ -49,9 +50,13 @@ class MyAwesomeModel(pl.LightningModule):
         """Configure optimizer."""
         return torch.optim.Adam(self.parameters(), lr=1e-3)
 
-def main():
+@hydra.main(config_path="../../configs", config_name="default_config")
+def main(cfg):
+    print(cfg)
+    print(instantiate(cfg.optimizer.Adam))
+    
     # Initialize the model
-    model = MyAwesomeModel()
+    model = Resnet18()
 
     # Print model architecture
     print(f"Model architecture: {model}")
@@ -86,6 +91,8 @@ def main():
 
 
 
+if __name__ == "__main__":
+    main()
 
     #print(f"Model architecture: {model}")
     #print(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
