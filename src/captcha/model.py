@@ -46,7 +46,26 @@ class Resnet18(pl.LightningModule):
         acc = (target == y_pred.argmax(dim=-1)).float().mean()
         self.log('train_loss', loss)
         self.log('train_acc', acc)
+        print(f"Train loss: {loss}, Train accuracy: {acc}")
         return loss
+    
+    def validation_step(self, batch) -> None:
+        img, target = batch
+        y_pred = self(img)
+        loss = self.loss_fn(y_pred, target)
+        acc = (target == y_pred.argmax(dim=-1)).float().mean()
+        self.log("val_loss", loss, on_epoch=True)
+        self.log("val_acc", acc, on_epoch=True)
+        print(f"Val loss: {loss}, Val accuracy: {acc}")
+
+    def test_step(self, batch) -> None:
+        img, target = batch
+        y_pred = self(img)
+        loss = self.loss_fn(y_pred, target)
+        acc = (target == y_pred.argmax(dim=-1)).float().mean()
+        self.log("test_loss", loss)
+        self.log("test_acc", acc)
+        print(f"Test loss: {loss}, Test accuracy: {acc}")
 
     def configure_optimizers(self):
         """Configure optimizer."""

@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from PIL import Image
 import torchvision.transforms as transforms
 import kagglehub
+from captcha import _ROOT
 
 
 class MyDataset(Dataset):
@@ -151,3 +152,20 @@ def preprocess() -> None:
 if __name__ == "__main__":
     typer.run(preprocess)
 
+
+def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, torch.utils.data.Dataset]:
+    """Return train and test datasets for CAPTCHA data set."""
+    path = f"{_ROOT}/data/processed/"
+
+    train_images = torch.load(f"{path}/train_images.pt")
+    train_target = torch.load(f"{path}/train_labels.pt")
+    test_images = torch.load(f"{path}/val_images.pt")
+    test_target = torch.load(f"{path}/val_labels.pt")
+    test_images = torch.load(f"{path}/test_images.pt")
+    test_target = torch.load(f"{path}/test_labels.pt")
+
+
+    train_set = torch.utils.data.TensorDataset(train_images, train_target)
+    validation_set = torch.utils.data.TensorDataset(train_images, train_target)
+    test_set = torch.utils.data.TensorDataset(test_images, test_target)
+    return train_set, validation_set, test_set
