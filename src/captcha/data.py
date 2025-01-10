@@ -11,6 +11,8 @@ import kagglehub
 class MyDataset(Dataset):
     """My custom dataset."""
 
+    
+
     def __init__(self, raw_data_path: Path) -> None:
         """
         Initialize the dataset with the given path to raw data.
@@ -33,7 +35,8 @@ class MyDataset(Dataset):
         img_path = img_files[index]
         with Image.open(img_path) as img:
             return img
-
+        
+        
   
     def preprocess(self, output_folder: Path) -> None:
         output_folder.mkdir(parents=True, exist_ok=True)
@@ -42,7 +45,7 @@ class MyDataset(Dataset):
         random.shuffle(img_files)
 
         # For selecting a subset 
-        subset_size = len(img_files)
+        subset_size = 100
         img_files = img_files[:min(subset_size, len(img_files))]
 
         # Extracting labels 
@@ -70,36 +73,42 @@ class MyDataset(Dataset):
         # To tensor and Resize to 244x244
         #TODO Normalize 
         transform = transforms.Compose([
-            transforms.Resize((244, 244)),
+            transforms.Resize((52, 32)),
             transforms.ToTensor(),
         ])
 
         # Return a tuple (image_tensor, label_int)
         def process_split(image_paths):
-            dataset = []
+            images = []
+            labels = []
             for img_path in image_paths:
                 label_str = img_path.stem.split('_')[0]
                 label_int = label_to_idx[label_str]
-                with Image.open(img_path) as img:
-                    img_tensor = transform(img)
-                dataset.append((img_tensor, label_int))
-            return dataset
+            with Image.open(img_path) as img:
+                img_tensor = transform(img)
+            images.append(img_tensor)
+            labels.append(label_int)
+            return images, labels
 
         # Split into datasets tensors 
         print(f"Processing {train_count} images for train split...")
-        train_dataset = process_split(train_files)
-        torch.save(train_dataset, output_folder / "train.pt")
+        train_images, train_labels = process_split(train_files)
+        torch.save(train_images, output_folder / "train_images.pt")
+        torch.save(train_labels, output_folder / "train_labels.pt")
 
         print(f"Processing {val_count} images for validation split...")
-        val_dataset = process_split(val_files)
-        torch.save(val_dataset, output_folder / "val.pt")
+        val_images, val_labels = process_split(val_files)
+        torch.save(val_images, output_folder / "val_images.pt")
+        torch.save(val_labels, output_folder / "val_labels.pt")
 
         print(f"Processing {test_count} images for test split...")
-        test_dataset = process_split(test_files)
-        torch.save(test_dataset, output_folder / "test.pt")
+        test_images, test_labels = process_split(test_files)
+        torch.save(test_images, output_folder / "test_images.pt")
+        torch.save(test_labels, output_folder / "test_labels.pt")
 
         # Save class names
         torch.save(class_names, output_folder / "class_names.pt")
+
 
         # Summary 
         print("Preprocessing complete.")
@@ -110,7 +119,8 @@ class MyDataset(Dataset):
         print(f"  Test:  {test_count} samples -> test.pt")
         print("Saved class names to: class_names.pt")
         print(f"Found {len(class_names)} unique classes:")
-        print(class_names)
+
+        
 
 
 def preprocess() -> None:
