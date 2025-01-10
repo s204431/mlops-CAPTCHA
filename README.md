@@ -1,15 +1,21 @@
 # captcha
 
-CAPTCHA project for DTU MLOps course
+This is a CAPTCHA project for DTU MLOps course.
 
 ## Introduction
-This is an introduction to our project. (maybe merge with "captcha")
+In this project we want to develope a Convolutional Neural Network (CNN) to solve CAPTCHAs, as they are used to differentiate between humans and machines. On the other hand we also want to create a structure in this project that can be used as a template for further projects in machine learning.
 
 ## Project goal
 Here we state our goal by saying what the problem is, what we want to achieve and how we will measure that.
+Maybe already in intro? expand on that
 
 ## Data
-Here we can describe/explain the data.
+For our project we use the [*CAPTCHA Characters Dataset*](https://www.kaggle.com/datasets/tahabakhtari/captcha-characters-dataset-118k-images) published by Taha Bakhtari on kaggle.
+It covers over 118.000 black-and-white images of letters and digits from CAPTCHAs with an image size of 52x32 pixel.
+
+Here’s an example of a CAPTCHA image for the digit "2" from our dataset:
+
+![Example CAPTCH of a "2".](data/raw/2_10067.png)
 
 ## Model
 Here we talk about our model that we use.
