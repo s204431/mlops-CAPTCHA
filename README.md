@@ -1,6 +1,6 @@
 # CAPTCHA solving CNN
 
-In this project we want to develop a deep learning model based on Convolutional Neural Networks to solve CAPTCHAs, as they are often used to differentiate between humans and machines. This is a good measure of how well the model can adapt to a method, intended to make it fail. In addition to this we want to create a structure in this project that can be used as a template for further projects in machine learning. Not only will this make it easier to set up a new project, but it will also help in the future to understand the general structure and the meaning behind it in other peoples work.
+In this project we want to develop a deep learning model based on Convolutional Neural Networks (CNN) to solve CAPTCHAs, as they are often used to differentiate between humans and machines. This is a good measure of how well the model can adapt to a method, intended to make it fail. In addition to this we want to create a structure in this project that can be used as a template for further projects in machine learning. Not only will this make it easier to set up a new project, but it will also help in the future to understand the general structure and the meaning behind it in other peoples work.
 
 We are using the *[PyTorch Image Models (timm)](https://github.com/rwightman/pytorch-image-models)* framework, which is a library containing for example different models applicable for image classification. We make use of the pretrained *resnet18* with a final layer to match the output size as the model of choice for our project. This model is not too complex but it should be enough for this project. Additionally we make use of pytorch lightning to train it.
 
@@ -10,7 +10,7 @@ Here’s an example of a CAPTCHA image from our dataset:
 
 ![Example CAPTCH.](reports/figures/2_10067.png)
 
-For now the data was loaded manually, using less than one gigabyte, but we will later implement the downloading process in the [data.py](src/captcha/data.py) and save the data using version control.
+For now the data was loaded manually, using less than one gigabyte, but we will later implement the downloading process in the [data.py](src/captcha/data.py) and save the data using version control. We plan to start by randomly sampling 10.000 images at the start of developing. We will then consider training on the entire dataset later on.
 
 
 ## Model
