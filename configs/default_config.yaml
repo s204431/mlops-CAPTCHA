@@ -1,4 +1,4 @@
 defaults:
 - model: model
-- optimizer: optimizer
+- optimizer: Adam_opt
 
