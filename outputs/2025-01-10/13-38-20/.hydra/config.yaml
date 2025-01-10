@@ -1,0 +1,2 @@
+model: ${model/resnet18.yaml}
+optimizer: ${optimizer/Adam.yaml}

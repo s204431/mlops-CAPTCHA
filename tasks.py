@@ -73,7 +73,8 @@ def serve_docs(ctx: Context) -> None:
     ctx.run("mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
 
 @task
-def git(ctx, message):
-    ctx.run(f"git add .")
-    ctx.run(f"git commit -m '{message}'")
+def git(ctx, file, m):
+    ctx.run(f"git add '{file}'")
+    ctx.run(f"git commit -m '{m}'")
     ctx.run(f"git push")
+
