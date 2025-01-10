@@ -17,4 +17,4 @@ COPY reports/ reports/
 RUN pip install -r requirements.txt --no-cache-dir
 RUN pip install . --no-deps --no-cache-dir
 
-ENTRYPOINT ["python", "-u", "src/captcha/train.py"]
+ENTRYPOINT ["python", "-u", "src/captcha/evaluate.py"]
