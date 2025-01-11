@@ -15,8 +15,6 @@ from captcha.logger import logger  # Import the configured Loguru logger
 
 def train(cfg):
     logger.info("\033[36m🚀 Starting training...")
-
-    logger.info("\033[36m🚀 Starting training...")
     train_set, validation_set, test_set = load_data()
     #train_set, validation_set, test_set = load_dummy()
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.model.hyperparameters['batch_size'], shuffle=True, num_workers=4, persistent_workers=True)
