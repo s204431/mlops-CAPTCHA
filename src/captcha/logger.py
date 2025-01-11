@@ -1,8 +1,25 @@
-from loguru import logger
+# captcha/logger.py
 
-logger.debug("Used for debugging your code.")
-logger.info("Informative messages from your code.")
-logger.warning("Everything works but there is something to be aware of.")
-logger.error("There's been a mistake with the process.")
-logger.success("The process has been completed successfully.")
-logger.critical("There is something terribly wrong and process may terminate.")
+from loguru import logger
+import sys
+from pathlib import Path
+import pytorch_lightning as pl
+# Ensure the logs directory exists
+Path("outputs").mkdir(parents=True, exist_ok=True)
+
+# Remove the default Loguru handler to prevent duplicate logs
+logger.remove()
+
+# Add a console handler with a specific format and INFO level
+logger.add(
+    sys.stdout, 
+    format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}", 
+    level="INFO",
+    colorize=True
+)
+
+
+# Export the logger for use in other modules
+__all__ = ["logger"]
+
+
