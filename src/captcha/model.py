@@ -8,6 +8,7 @@ from torchvision import transforms
 import torchvision.datasets as datasets
 import hydra
 from hydra.utils import instantiate
+from loguru import logger
 
 class Resnet18(pl.LightningModule):
     """My awesome model."""
@@ -46,7 +47,7 @@ class Resnet18(pl.LightningModule):
         acc = (target == y_pred.argmax(dim=-1)).float().mean()
         self.log('train_loss', loss, on_epoch=True)
         self.log('train_acc', acc, on_epoch=True)
-        print(f"Train loss: {loss}, Train accuracy: {acc}")
+        #print(f"Train loss: {loss}, Train accuracy: {acc}")
         return loss
     
     def validation_step(self, batch) -> None:
@@ -56,7 +57,7 @@ class Resnet18(pl.LightningModule):
         acc = (target == y_pred.argmax(dim=-1)).float().mean()
         self.log("val_loss", loss, on_epoch=True)
         self.log("val_acc", acc, on_epoch=True)
-        print(f"Val loss: {loss}, Val accuracy: {acc}")
+        #print(f"Val loss: {loss}, Val accuracy: {acc}")
 
     def test_step(self, batch) -> None:
         img, target = batch
@@ -65,11 +66,29 @@ class Resnet18(pl.LightningModule):
         acc = (target == y_pred.argmax(dim=-1)).float().mean()
         self.log("test_loss", loss)
         self.log("test_acc", acc)
-        print(f"Test loss: {loss}, Test accuracy: {acc}")
+        #print(f"Test loss: {loss}, Test accuracy: {acc}")
 
     def configure_optimizers(self):
         """Configure optimizer."""
         return hydra.utils.instantiate(self.optimizer_cfg, params=self.parameters())
+    
+    def on_train_epoch_end(self) -> None:
+        train_loss = self.trainer.callback_metrics.get('train_loss')
+        train_acc = self.trainer.callback_metrics.get('train_acc')
+        if train_loss is not None and train_acc is not None:
+            logger.info(f"\033[36m🔄 Epoch {self.trainer.current_epoch + 1}\033[0m Training - \033[33mLoss: {train_loss:.4f}\033[0m | \033[32mAccuracy: {train_acc:.4f}\033[0m")
+
+    def on_validation_epoch_end(self) -> None:
+        val_loss = self.trainer.callback_metrics.get('val_loss')
+        val_acc = self.trainer.callback_metrics.get('val_acc')
+        if val_loss is not None and val_acc is not None:
+            logger.info(f"\033[36m✅ Epoch {self.trainer.current_epoch + 1}\033[0m Validation - \033[33mLoss: {val_loss:.4f}\033[0m | \033[32mAccuracy: {val_acc:.4f}\033[0m")
+
+    def on_test_epoch_end(self) -> None:
+        test_loss = self.trainer.callback_metrics.get('test_loss')
+        test_acc = self.trainer.callback_metrics.get('test_acc')
+        if test_loss is not None and test_acc is not None:
+            logger.info(f"\033[36m🧪 Test Results\033[0m - \033[33mLoss: {test_loss:.4f}\033[0m | \033[32mAccuracy: {test_acc:.4f}\033[0m")
 
 @hydra.main(config_path="../../configs", config_name="default_config")
 def main(cfg):
