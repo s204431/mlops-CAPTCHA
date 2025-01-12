@@ -9,36 +9,38 @@ from torch.utils.data import DataLoader, random_split, TensorDataset
 from torchvision import transforms
 import torchvision.datasets as datasets
 from captcha import _ROOT
-from torch.profiler import profile, tensorboard_trace_handler
+from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
 from loguru import logger
 from captcha.logger import logger  # Import the configured Loguru logger
 
 def train(cfg):
     logger.info("\033[36m🚀 Starting training...")
-    train_set, validation_set, test_set = load_data()
-    #train_set, validation_set, test_set = load_dummy()
-    train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.model.hyperparameters['batch_size'], shuffle=True, num_workers=4, persistent_workers=True)
-    validation_dataloader = torch.utils.data.DataLoader(validation_set, batch_size=cfg.model.hyperparameters['batch_size'], num_workers=4, persistent_workers=True)
-    test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=cfg.model.hyperparameters['batch_size'], num_workers=4, persistent_workers=True)
-    model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule
-    #early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
+    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
+        train_set, validation_set, test_set = load_data()
+        #train_set, validation_set, test_set = load_dummy()
+        train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.model.hyperparameters['batch_size'], shuffle=True, num_workers=4, persistent_workers=True)
+        validation_dataloader = torch.utils.data.DataLoader(validation_set, batch_size=cfg.model.hyperparameters['batch_size'], num_workers=4, persistent_workers=True)
+        test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=cfg.model.hyperparameters['batch_size'], num_workers=4, persistent_workers=True)
+        model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule
+        #early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
 
-    trainer = pl.Trainer(
-        max_epochs=cfg.model.hyperparameters['epochs'],
-        #limit_train_batches=0.2,
-        #callbacks=[early_stopping_callback],
-        logger=pl.loggers.WandbLogger(project="Captcha"),
-        enable_progress_bar=False
-    )  # this is our Trainer
+        trainer = pl.Trainer(
+            max_epochs=cfg.model.hyperparameters['epochs'],
+            #limit_train_batches=0.2,
+            #callbacks=[early_stopping_callback],
+            logger=pl.loggers.WandbLogger(project="Captcha"),
+            enable_progress_bar=False
+        )  # this is our Trainer
 
-    trainer.fit(model, train_dataloader, validation_dataloader)
-    logger.info("\033[36m🏁 Training completed. Starting testing...")
-    trainer.test(model, test_dataloader)
-    #trainer.test(model, test_dataloader)
-    logger.info("\033✅ Testing completed.")
-    torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
-    # save the model to the outputs directory based on the time of run logged by hydra logger
-    logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
+        trainer.fit(model, train_dataloader, validation_dataloader)
+        logger.info("\033[36m🏁 Training completed. Starting testing...")
+        trainer.test(model, test_dataloader)
+        #trainer.test(model, test_dataloader)
+        logger.info("\033✅ Testing completed.")
+        torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
+        # save the model to the outputs directory based on the time of run logged by hydra logger
+        logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
+    print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
 def load_dummy(): #Temporary function with dummy data
     # Dummy Dataset (Replace with your real dataset)
