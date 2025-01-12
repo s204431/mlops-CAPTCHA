@@ -199,6 +199,10 @@ def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, tor
     test_set = torch.utils.data.TensorDataset(test_images, test_target)
     return train_set, validation_set, test_set
 
-if __name__ == "__main__":
+
+def main():
     typer.run(preprocess)
+
+if __name__ == "__main__":
+    main()
 

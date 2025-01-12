@@ -34,3 +34,4 @@ omit = ["tests/*"]
 [project.scripts]
 train = "captcha.train:main"
 evaluate = "captcha.evaluate:main"
+data = "captcha.data:main"
