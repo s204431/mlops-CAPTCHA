@@ -4,13 +4,11 @@ import hydra
 from captcha.model import Resnet18
 from captcha.data import load_data
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import EarlyStopping
-from torch.utils.data import DataLoader, random_split, TensorDataset
+from torch.utils.data import random_split
 from torchvision import transforms
 import torchvision.datasets as datasets
 from captcha import _ROOT
 from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
-from loguru import logger
 from captcha.logger import logger  # Import the configured Loguru logger
 from omegaconf import DictConfig
 from typing import Tuple

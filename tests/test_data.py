@@ -1,6 +1,4 @@
-from torch.utils.data import Dataset
 
-from src.captcha.data import MyDataset
 
 def test_my_dataset():
     """Test the MyDataset class."""

@@ -76,6 +76,6 @@ def serve_docs(ctx: Context) -> None:
 def git(ctx, file, m):
     ctx.run(f"git add '{file}'")
     ctx.run(f"git commit -m '{m}'")
-    ctx.run(f"git push")
+    ctx.run("git push")
 
 

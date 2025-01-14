@@ -1,7 +1,7 @@
 import torch
 from captcha.model import Resnet18
 from pytorch_lightning import Trainer
-from torch.utils.data import DataLoader, random_split, TensorDataset
+from torch.utils.data import random_split
 from torchvision import transforms
 import torchvision.datasets as datasets
 from captcha import _ROOT

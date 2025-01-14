@@ -2,12 +2,10 @@ import pytorch_lightning as pl
 import torch
 from torch import nn
 import timm
-import wandb
-from torch.utils.data import DataLoader, random_split, TensorDataset
+from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 import torchvision.datasets as datasets
 import hydra
-from hydra.utils import instantiate
 from loguru import logger
 from omegaconf import DictConfig
 from typing import Tuple

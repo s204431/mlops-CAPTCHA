@@ -1,4 +1,3 @@
-import os
 import random
 from pathlib import Path
 from zipfile import ZipFile
@@ -8,7 +7,7 @@ import typer
 import gdown
 from loguru import logger
 from PIL import Image
-from torch.utils.data import Dataset, TensorDataset
+from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 from tqdm import tqdm
 from captcha import _ROOT
@@ -118,7 +117,7 @@ class MyDataset(Dataset):
 
             # Summary
             logger.info("\033[36mPreprocessing complete.")
-            logger.info(f"\033[36mSplit summary:")
+            logger.info("\033[36mSplit summary:")
             logger.info(f"\033[36m  Train: {train_count} samples")
             logger.info(f"\033[36m  Val:   {val_count} samples")
             logger.info(f"\033[36m  Test:  {test_count} samples")
