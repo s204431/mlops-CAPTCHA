@@ -9,11 +9,13 @@ import torchvision.datasets as datasets
 import hydra
 from hydra.utils import instantiate
 from loguru import logger
+from omegaconf import DictConfig
+from typing import Tuple
 
 class Resnet18(pl.LightningModule):
-    """My awesome model."""
+    """Resnet18 model."""
 
-    def __init__(self, optimimzer_cfg, num_classes: int = 20) -> None:
+    def __init__(self, optimimzer_cfg: DictConfig, num_classes: int = 20) -> None:
         super().__init__()
 
         self.optimizer_cfg = optimimzer_cfg
@@ -39,7 +41,7 @@ class Resnet18(pl.LightningModule):
         """Forward pass."""
         return self.model(x)
 
-    def training_step(self, batch):
+    def training_step(self, batch: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         """Training step."""
         img, target = batch
         y_pred = self(img)
@@ -50,7 +52,8 @@ class Resnet18(pl.LightningModule):
         #print(f"Train loss: {loss}, Train accuracy: {acc}")
         return loss
     
-    def validation_step(self, batch) -> None:
+    def validation_step(self, batch: Tuple[torch.Tensor, torch.Tensor]) -> None:
+        """Validation step."""
         img, target = batch
         y_pred = self(img)
         loss = self.loss_fn(y_pred, target)
@@ -59,7 +62,8 @@ class Resnet18(pl.LightningModule):
         self.log("val_acc", acc, on_epoch=True)
         #print(f"Val loss: {loss}, Val accuracy: {acc}")
 
-    def test_step(self, batch) -> None:
+    def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor]) -> None:
+        """Test step."""
         img, target = batch
         y_pred = self(img)
         loss = self.loss_fn(y_pred, target)
@@ -68,30 +72,34 @@ class Resnet18(pl.LightningModule):
         self.log("test_acc", acc)
         #print(f"Test loss: {loss}, Test accuracy: {acc}")
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> torch.optim.Optimizer:
         """Configure optimizer."""
         return hydra.utils.instantiate(self.optimizer_cfg, params=self.parameters())
     
     def on_train_epoch_end(self) -> None:
+        """Log training metrics at the end of each epoch."""
         train_loss = self.trainer.callback_metrics.get('train_loss')
         train_acc = self.trainer.callback_metrics.get('train_acc')
         if train_loss is not None and train_acc is not None:
             logger.info(f"\033[36m🔄 Epoch {self.trainer.current_epoch + 1}\033[0m Training - \033[33mLoss: {train_loss:.4f}\033[0m | \033[32mAccuracy: {train_acc:.4f}\033[0m")
 
     def on_validation_epoch_end(self) -> None:
+        """Log validation metrics at the end of each epoch."""
         val_loss = self.trainer.callback_metrics.get('val_loss')
         val_acc = self.trainer.callback_metrics.get('val_acc')
         if val_loss is not None and val_acc is not None:
             logger.info(f"\033[36m✅ Epoch {self.trainer.current_epoch + 1}\033[0m Validation - \033[33mLoss: {val_loss:.4f}\033[0m | \033[32mAccuracy: {val_acc:.4f}\033[0m")
 
     def on_test_epoch_end(self) -> None:
+        """Log test metrics at the end of the test epoch."""
         test_loss = self.trainer.callback_metrics.get('test_loss')
         test_acc = self.trainer.callback_metrics.get('test_acc')
         if test_loss is not None and test_acc is not None:
             logger.info(f"\033[36m🧪 Test Results\033[0m - \033[33mLoss: {test_loss:.4f}\033[0m | \033[32mAccuracy: {test_acc:.4f}\033[0m")
 
 @hydra.main(config_path="../../configs", config_name="default_config")
-def main(cfg):
+def main(cfg: DictConfig) -> None:
+    """Main function. Trains on dummy data."""
 
     # Initialize the model
     model = Resnet18(cfg.optimizer.Adam_opt)

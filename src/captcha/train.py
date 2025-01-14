@@ -12,8 +12,11 @@ from captcha import _ROOT
 from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
 from loguru import logger
 from captcha.logger import logger  # Import the configured Loguru logger
+from omegaconf import DictConfig
+from typing import Tuple
 
-def train(cfg):
+def train(cfg: DictConfig) -> None:
+    """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
         train_set, validation_set, test_set = load_data()
@@ -42,8 +45,8 @@ def train(cfg):
         logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
     print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
-def load_dummy(): #Temporary function with dummy data
-    # Dummy Dataset (Replace with your real dataset)
+def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeData]:
+    """Loads a dummy dataset."""
     transform = transforms.Compose([
         transforms.Resize((52, 32)),
         transforms.ToTensor()
@@ -64,23 +67,9 @@ def load_dummy(): #Temporary function with dummy data
     return train_dataset, val_dataset, test_dataset
 
 @hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config")
-def main(cfg):
+def main(cfg: DictConfig) -> None:
+    """Main function. Simply runs the training."""
     train(cfg)
-    #train_set, validation_set, test_set = load_data()
-    """train_set, validation_set, test_set = load_dummy()
-    train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.model.hyperparameters['batch_size'], shuffle=True)
-    validation_dataloader = torch.utils.data.DataLoader(validation_set, batch_size=cfg.model.hyperparameters['batch_size'])
-    test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=cfg.model.hyperparameters['batch_size'])
-    model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule
-    #early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
-    trainer = Trainer(
-        max_epochs=cfg.model.hyperparameters['epochs'],
-        #limit_train_batches=0.2,
-        #callbacks=[early_stopping_callback],
-        #logger=loggers.WandbLogger(project="wandb_test"),
-    )  # this is our Trainer
-    trainer.fit(model, train_dataloader, validation_dataloader)
-    #trainer.test(model, test_dataloader)"""
 
 if __name__ == "__main__":
     main()

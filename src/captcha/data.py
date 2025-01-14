@@ -19,7 +19,7 @@ PROCESSED_DATA_PATH = Path("data/processed")
 
 
 class MyDataset(Dataset):
-    """My custom dataset."""
+    """Custom dataset for the CAPTCHA data."""
 
     def __init__(self, raw_data_path: Path) -> None:
         """
@@ -35,7 +35,7 @@ class MyDataset(Dataset):
         """
         return len(self._png_files)
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> Image.Image:
         """
         Return the sample (image, label, etc.) at the given index.
         (Implementation depends on your downstream use-case.)
@@ -45,7 +45,7 @@ class MyDataset(Dataset):
             return img
         
     def preprocess(self, output_folder: Path, subset_size: int = 10000) -> None:
-
+        """Preprocess the dataset."""
         with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
             output_folder.mkdir(parents=True, exist_ok=True)
 
@@ -137,7 +137,7 @@ def normalize(images: torch.Tensor) -> torch.Tensor:
     return (images - images.mean()) / images.std()
 
 def download_extract_dataset(raw_data_path: Path, zip_url: str) -> None:
-
+    """Download and extract the dataset."""
     # If folder is not empty, skip download
     if raw_data_path.exists() and any(raw_data_path.iterdir()):
         logger.info(f"'{raw_data_path}' is not empty. Skipping download & extraction...")
@@ -175,8 +175,8 @@ def download_extract_dataset(raw_data_path: Path, zip_url: str) -> None:
 
     logger.info(f"\033[36mAll PNG files moves to {RAW_DATA_PATH}")
 
-def preprocess():
-
+def preprocess() -> None:
+    """Preprocess the CAPTCHA dataset."""
     zip_url = "https://drive.google.com/uc?id=1HyOhjM2WgmRucD-czc3UzTaFBAtx7-ae"
     download_extract_dataset(RAW_DATA_PATH, zip_url=zip_url)
 
@@ -186,7 +186,7 @@ def preprocess():
     logger.success("\033[32m ✅Data preprocessing complete.")
 
 def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, torch.utils.data.Dataset]:
-    """Return train and test datasets for CAPTCHA data set."""
+    """Return train, validation and test datasets for CAPTCHA data set."""
     path = f"{_ROOT}/data/processed/"
 
     train_images = torch.load(f"{path}/train_images.pt")
@@ -204,6 +204,7 @@ def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, tor
 
 
 def main():
+    """Main function. Preprocesses the data."""
     typer.run(preprocess)
 
 if __name__ == "__main__":

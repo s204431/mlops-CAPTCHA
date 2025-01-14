@@ -8,8 +8,11 @@ from captcha import _ROOT
 from captcha.data import load_data
 import hydra
 from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
+from omegaconf import DictConfig
+from typing import Tuple
 
-def evaluate(cfg):
+def evaluate(cfg: DictConfig) -> None:
+    """Evaluates the model on the test set."""
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
         _, _, test_set = load_data()
         #_, _, test_set = load_dummy()
@@ -23,8 +26,8 @@ def evaluate(cfg):
     print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
 
-def load_dummy(): #Temporary function with dummy data
-    # Dummy Dataset (Replace with your real dataset)
+def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeData]:
+    """Loads a dummy dataset."""
     transform = transforms.Compose([
         transforms.Resize((52, 32)),
         transforms.ToTensor()
@@ -45,7 +48,8 @@ def load_dummy(): #Temporary function with dummy data
     return train_dataset, val_dataset, test_dataset
 
 @hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config")
-def main(cfg):
+def main(cfg: DictConfig) -> None:
+    """Main function. Evaluates the model on the test set."""
     evaluate(cfg)
 
 if __name__ == "__main__":
