@@ -1,5 +1,7 @@
 import torch
 import hydra
+import os
+import wandb
 
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
@@ -12,6 +14,7 @@ from captcha import _ROOT
 from captcha.logger import logger  # Import the configured Loguru logger
 from omegaconf import DictConfig
 from typing import Tuple
+from dotenv import load_dotenv
 
 
 def train(cfg: DictConfig) -> None:
@@ -71,9 +74,11 @@ def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeDat
     return train_dataset, val_dataset, test_dataset
 
 
-@hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config")
+@hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Simply runs the training."""
+    load_dotenv()
+    wandb.login(key=os.getenv("WANDB_API_KEY"))
     train(cfg)
 
 

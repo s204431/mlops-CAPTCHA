@@ -103,7 +103,7 @@ class Resnet18(pl.LightningModule):
             )
 
 
-@hydra.main(config_path="../../configs", config_name="default_config")
+@hydra.main(config_path="../../configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Trains on dummy data."""
 
