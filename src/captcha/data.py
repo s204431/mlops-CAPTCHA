@@ -9,13 +9,12 @@ from loguru import logger
 from PIL import Image
 import torchvision.transforms as transforms
 from tqdm import tqdm
-from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
+from torch.profiler import profile, ProfilerActivity  # didnt work for me ->, tensorboard_trace_handler
 
 RAW_DATA_PATH = Path("data/raw")
 PROCESSED_DATA_PATH = Path("data/processed")
 
 
-        
 def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
     """Preprocess the dataset."""
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
@@ -23,19 +22,19 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
 
         img_files = list(input_folder.glob("**/*.png"))
         random.shuffle(img_files)
-        img_files = img_files[:min(subset_size, len(img_files))]
+        img_files = img_files[: min(subset_size, len(img_files))]
 
-        # Extracting labels 
+        # Extracting labels
         all_labels = []
         for img_path in img_files:
-            label_str = img_path.stem.split('_')[0]
+            label_str = img_path.stem.split("_")[0]
             all_labels.append(label_str)
-        
+
         # Convert to a sorted list of unique labels
         class_names = sorted(list(set(all_labels)))
         # Create a dictionary {label_str: class_idx}
         label_to_idx = {lbl: i for i, lbl in enumerate(class_names)}
-        
+
         # Split into train/val/test
         total_count = len(img_files)
         test_count = int(0.10 * total_count)
@@ -46,26 +45,27 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
         val_files = img_files[train_count : train_count + val_count]
         test_files = img_files[train_count + val_count :]
 
-        transform = transforms.Compose([
-            transforms.ToTensor(),
-        ])
+        transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+            ]
+        )
 
         # Return a tuple (image_tensor, label_int)
         def process_split(image_paths):
             images, labels = [], []
             for img_path in image_paths:
-                label_str = img_path.stem.split('_')[0]
+                label_str = img_path.stem.split("_")[0]
                 label_int = label_to_idx[label_str]
                 with Image.open(img_path) as img:
                     img_tensor = transform(img)
                     images.append(img_tensor)
                     labels.append(label_int)
-            images = torch.stack(images) # Stack to (N, C, H, W)
+            images = torch.stack(images)  # Stack to (N, C, H, W)
             labels = torch.tensor(labels)  # Labels to tensor
             return images, labels
 
-
-        # Split into datasets tensors 
+        # Split into datasets tensors
         logger.info(f"\033[36mProcessing {train_count} images for train split...")
         train_images, train_labels = process_split(train_files)
         logger.info(f"\033[36mTrain images shape {train_images.shape}")
@@ -87,7 +87,6 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
         # Save class names
         torch.save(class_names, output_folder / "class_names.pt")
 
-
         # Summary
         logger.info("\033[36mPreprocessing complete.")
         logger.info("\033[36mSplit summary:")
@@ -108,22 +107,23 @@ def normalize(images: torch.Tensor) -> torch.Tensor:
     """
     return (images - images.mean()) / images.std()
 
+
 def download_extract_dataset(raw_data_path: Path, zip_url: str) -> None:
     """Download and extract the dataset."""
     # If folder is not empty, skip download
     if raw_data_path.exists() and any(raw_data_path.iterdir()):
         logger.info(f"'{raw_data_path}' is not empty. Skipping download & extraction...")
         return
-    
+
     logger.info(f"Downloading dataset from Google Drive to {zip_url}...")
     raw_data_path.mkdir(parents=True, exist_ok=True)
 
     zip_path = raw_data_path / "dataset.zip"
     gdown.download(zip_url, str(zip_path), quiet=False)
 
-    # extract the dataset.zip file 
+    # extract the dataset.zip file
     logger.info("Extracting dataset...")
-    with ZipFile(zip_path, 'r') as zip_ref:
+    with ZipFile(zip_path, "r") as zip_ref:
         for file in tqdm(zip_ref.namelist(), desc="Extracting files", unit="file"):
             zip_ref.extract(member=file, path=raw_data_path)
 
@@ -147,6 +147,7 @@ def download_extract_dataset(raw_data_path: Path, zip_url: str) -> None:
 
     logger.info(f"\033[36mAll PNG files moves to {RAW_DATA_PATH}")
 
+
 def preprocess() -> None:
     """Preprocess the CAPTCHA dataset."""
     zip_url = "https://drive.google.com/uc?id=1HyOhjM2WgmRucD-czc3UzTaFBAtx7-ae"
@@ -156,10 +157,11 @@ def preprocess() -> None:
     preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=1000000)
     logger.success("\033[32m ✅Data preprocessing complete.")
 
+
 def main():
     """Main function. Preprocesses the data."""
     typer.run(preprocess)
 
+
 if __name__ == "__main__":
     main()
-

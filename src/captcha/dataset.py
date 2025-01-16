@@ -4,6 +4,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = True) -> None:
     """Show images and target labels."""
     fig, axes = plt.subplots(5, 5, figsize=(10, 10))
@@ -13,6 +14,7 @@ def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = T
         ax.axis("off")
     if show:
         plt.show()
+
 
 def dataset_statistics(datadir: str = "data/processed") -> None:
     train_dataset = CaptchaDataset(datadir, "train")
@@ -63,6 +65,7 @@ def dataset_statistics(datadir: str = "data/processed") -> None:
     plt.savefig("test_label_distribution.png")
     plt.close()
 
+
 class CaptchaDataset(Dataset):
     """Custom dataset for the CAPTCHA data."""
 
@@ -95,6 +98,7 @@ class CaptchaDataset(Dataset):
     def __len__(self) -> int:
         """Return the number of images in the dataset."""
         return self.images.shape[0]
+
 
 if __name__ == "__main__":
     dataset_statistics()
