@@ -1,4 +1,3 @@
 Adam_opt:
   _target_: torch.optim.Adam
   lr: 1e-3
-
