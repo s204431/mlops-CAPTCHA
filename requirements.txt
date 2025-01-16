@@ -19,3 +19,4 @@ tqdm==4.67.1
 loguru==0.7.3
 python-dotenv==1.0.1
 wandb==0.19.2
+matplotlib==3.10.0
