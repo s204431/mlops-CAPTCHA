@@ -14,7 +14,7 @@ class CaptchaDataset(Dataset):
         self.data_path = processed_data_path
         self.data_type = data_type
         self.load_data()
-    
+
     def load_data(self) -> None:
         """Return train, validation and test datasets for CAPTCHA data set."""
 
@@ -27,7 +27,8 @@ class CaptchaDataset(Dataset):
         else:
             self.images = torch.load(f"{self.data_path}/test_images.pt")
             self.target = torch.load(f"{self.data_path}/test_labels.pt")
-    
+        return self.images, self.target
+
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         """Return image and target tensor."""
         return self.images[idx], self.target[idx]
