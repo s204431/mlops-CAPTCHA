@@ -17,112 +17,87 @@ RAW_DATA_PATH = Path("data/raw")
 PROCESSED_DATA_PATH = Path("data/processed")
 
 
-class MyDataset(Dataset):
-    """Custom dataset for the CAPTCHA data."""
-
-    def __init__(self, raw_data_path: Path) -> None:
-        """
-        Initialize the dataset with the given path to raw data.
-        """
-        self.data_path = raw_data_path
-        self._png_files = list(self.data_path.glob("**/*.png"))
-
-    def __len__(self) -> int:
-        """
-        Return the length of the dataset.
-        (Implement logic for counting images or data samples, if needed.)
-        """
-        return len(self._png_files)
-
-    def __getitem__(self, index: int) -> Image.Image:
-        """
-        Return the sample (image, label, etc.) at the given index.
-        (Implementation depends on your downstream use-case.)
-        """
-        img_path = self._png_files[index]
-        with Image.open(img_path) as img:
-            return img
         
-    def preprocess(self, output_folder: Path, subset_size: int = 10000) -> None:
-        """Preprocess the dataset."""
-        with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-            output_folder.mkdir(parents=True, exist_ok=True)
+def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
+    """Preprocess the dataset."""
+    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
+        output_folder.mkdir(parents=True, exist_ok=True)
 
-            img_files = list(self.data_path.glob("**/*.png"))
-            random.shuffle(img_files)
-            img_files = img_files[:min(subset_size, len(img_files))]
+        img_files = list(input_folder.glob("**/*.png"))
+        random.shuffle(img_files)
+        img_files = img_files[:min(subset_size, len(img_files))]
 
-            # Extracting labels 
-            all_labels = []
-            for img_path in img_files:
+        # Extracting labels 
+        all_labels = []
+        for img_path in img_files:
+            label_str = img_path.stem.split('_')[0]
+            all_labels.append(label_str)
+        
+        # Convert to a sorted list of unique labels
+        class_names = sorted(list(set(all_labels)))
+        # Create a dictionary {label_str: class_idx}
+        label_to_idx = {lbl: i for i, lbl in enumerate(class_names)}
+        
+        # Split into train/val/test
+        total_count = len(img_files)
+        test_count = int(0.10 * total_count)
+        val_count = int(0.20 * total_count)
+        train_count = total_count - test_count - val_count
+
+        train_files = img_files[:train_count]
+        val_files = img_files[train_count : train_count + val_count]
+        test_files = img_files[train_count + val_count :]
+
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+
+        # Return a tuple (image_tensor, label_int)
+        def process_split(image_paths):
+            images, labels = [], []
+            for img_path in image_paths:
                 label_str = img_path.stem.split('_')[0]
-                all_labels.append(label_str)
-            
-            # Convert to a sorted list of unique labels
-            class_names = sorted(list(set(all_labels)))
-            # Create a dictionary {label_str: class_idx}
-            label_to_idx = {lbl: i for i, lbl in enumerate(class_names)}
-            
-            # Split into train/val/test
-            total_count = len(img_files)
-            test_count = int(0.10 * total_count)
-            val_count = int(0.20 * total_count)
-            train_count = total_count - test_count - val_count
-
-            train_files = img_files[:train_count]
-            val_files = img_files[train_count : train_count + val_count]
-            test_files = img_files[train_count + val_count :]
-
-            transform = transforms.Compose([
-                transforms.ToTensor(),
-            ])
-
-            # Return a tuple (image_tensor, label_int)
-            def process_split(image_paths):
-                images, labels = [], []
-                for img_path in image_paths:
-                    label_str = img_path.stem.split('_')[0]
-                    label_int = label_to_idx[label_str]
-                    with Image.open(img_path) as img:
-                        img_tensor = transform(img)
-                        images.append(img_tensor)
-                        labels.append(label_int)
-                images = torch.stack(images) # Stack to (N, C, H, W)
-                labels = torch.tensor(labels)  # Labels to tensor
-                return images, labels
+                label_int = label_to_idx[label_str]
+                with Image.open(img_path) as img:
+                    img_tensor = transform(img)
+                    images.append(img_tensor)
+                    labels.append(label_int)
+            images = torch.stack(images) # Stack to (N, C, H, W)
+            labels = torch.tensor(labels)  # Labels to tensor
+            return images, labels
 
 
-            # Split into datasets tensors 
-            logger.info(f"\033[36mProcessing {train_count} images for train split...")
-            train_images, train_labels = process_split(train_files)
-            logger.info(f"\033[36mTrain images shape {train_images.shape}")
-            torch.save(train_images, output_folder / "train_images.pt")
-            torch.save(train_labels, output_folder / "train_labels.pt")
+        # Split into datasets tensors 
+        logger.info(f"\033[36mProcessing {train_count} images for train split...")
+        train_images, train_labels = process_split(train_files)
+        logger.info(f"\033[36mTrain images shape {train_images.shape}")
+        torch.save(train_images, output_folder / "train_images.pt")
+        torch.save(train_labels, output_folder / "train_labels.pt")
 
-            logger.info(f"\033[36mProcessing {val_count} images for val split...")
-            val_images, val_labels = process_split(val_files)
-            logger.info(f"\033[36mVal images shape {val_images.shape}")
-            torch.save(val_images, output_folder / "val_images.pt")
-            torch.save(val_labels, output_folder / "val_labels.pt")
+        logger.info(f"\033[36mProcessing {val_count} images for val split...")
+        val_images, val_labels = process_split(val_files)
+        logger.info(f"\033[36mVal images shape {val_images.shape}")
+        torch.save(val_images, output_folder / "val_images.pt")
+        torch.save(val_labels, output_folder / "val_labels.pt")
 
-            logger.info(f"\033[36mProcessing {test_count} images for test split...")
-            test_images, test_labels = process_split(test_files)
-            logger.info(f"\033[36mTest images shape {test_images.shape}")
-            torch.save(test_images, output_folder / "test_images.pt")
-            torch.save(test_labels, output_folder / "test_labels.pt")
+        logger.info(f"\033[36mProcessing {test_count} images for test split...")
+        test_images, test_labels = process_split(test_files)
+        logger.info(f"\033[36mTest images shape {test_images.shape}")
+        torch.save(test_images, output_folder / "test_images.pt")
+        torch.save(test_labels, output_folder / "test_labels.pt")
 
-            # Save class names
-            torch.save(class_names, output_folder / "class_names.pt")
+        # Save class names
+        torch.save(class_names, output_folder / "class_names.pt")
 
 
-            # Summary
-            logger.info("\033[36mPreprocessing complete.")
-            logger.info("\033[36mSplit summary:")
-            logger.info(f"\033[36m  Train: {train_count} samples")
-            logger.info(f"\033[36m  Val:   {val_count} samples")
-            logger.info(f"\033[36m  Test:  {test_count} samples")
-            logger.info(f"\033[36mFound {len(class_names)} unique classes: {class_names}")
-        print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
+        # Summary
+        logger.info("\033[36mPreprocessing complete.")
+        logger.info("\033[36mSplit summary:")
+        logger.info(f"\033[36m  Train: {train_count} samples")
+        logger.info(f"\033[36m  Val:   {val_count} samples")
+        logger.info(f"\033[36m  Test:  {test_count} samples")
+        logger.info(f"\033[36mFound {len(class_names)} unique classes: {class_names}")
+    print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
 
 def normalize(images: torch.Tensor) -> torch.Tensor:
@@ -180,27 +155,8 @@ def preprocess() -> None:
     download_extract_dataset(RAW_DATA_PATH, zip_url=zip_url)
 
     logger.info("\033[36mPreprocessing data...")
-    dataset = MyDataset(RAW_DATA_PATH)
-    dataset.preprocess(PROCESSED_DATA_PATH, subset_size=1000000)
+    preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=1000000)
     logger.success("\033[32m ✅Data preprocessing complete.")
-
-def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, torch.utils.data.Dataset]:
-    """Return train, validation and test datasets for CAPTCHA data set."""
-    path = f"{_ROOT}/data/processed/"
-
-    train_images = torch.load(f"{path}/train_images.pt")
-    train_target = torch.load(f"{path}/train_labels.pt")
-    test_images = torch.load(f"{path}/val_images.pt")
-    test_target = torch.load(f"{path}/val_labels.pt")
-    test_images = torch.load(f"{path}/test_images.pt")
-    test_target = torch.load(f"{path}/test_labels.pt")
-
-
-    train_set = torch.utils.data.TensorDataset(train_images, train_target)
-    validation_set = torch.utils.data.TensorDataset(train_images, train_target)
-    test_set = torch.utils.data.TensorDataset(test_images, test_target)
-    return train_set, validation_set, test_set
-
 
 def main():
     """Main function. Preprocesses the data."""

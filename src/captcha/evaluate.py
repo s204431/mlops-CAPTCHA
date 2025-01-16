@@ -1,11 +1,11 @@
 import torch
 from captcha.model import Resnet18
+from captcha.dataset import CaptchaDataset
 from pytorch_lightning import Trainer
 from torch.utils.data import random_split
 from torchvision import transforms
 import torchvision.datasets as datasets
 from captcha import _ROOT
-from captcha.data import load_data
 import hydra
 from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
 from omegaconf import DictConfig
@@ -14,7 +14,8 @@ from typing import Tuple
 def evaluate(cfg: DictConfig) -> None:
     """Evaluates the model on the test set."""
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-        _, _, test_set = load_data()
+        data_path = f"{_ROOT}/data/processed/"
+        test_set = CaptchaDataset(data_path, "test")
         #_, _, test_set = load_dummy()
         test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=cfg.model.hyperparameters['batch_size'])
         model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule

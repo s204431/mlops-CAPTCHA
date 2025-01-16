@@ -2,7 +2,7 @@ import torch
 import hydra
 #from captcha.dataloader import load_data
 from captcha.model import Resnet18
-from captcha.data import load_data
+from captcha.dataset import CaptchaDataset
 import pytorch_lightning as pl
 from torch.utils.data import random_split
 from torchvision import transforms
@@ -17,7 +17,10 @@ def train(cfg: DictConfig) -> None:
     """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-        train_set, validation_set, test_set = load_data()
+        data_path = f"{_ROOT}/data/processed/"
+        train_set = CaptchaDataset(data_path, "train")
+        validation_set = CaptchaDataset(data_path, "validation")
+        test_set = CaptchaDataset(data_path, "test")
         #train_set, validation_set, test_set = load_dummy()
         train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.model.hyperparameters['batch_size'], shuffle=True, num_workers=4, persistent_workers=True)
         validation_dataloader = torch.utils.data.DataLoader(validation_set, batch_size=cfg.model.hyperparameters['batch_size'], num_workers=4, persistent_workers=True)
