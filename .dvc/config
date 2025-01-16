@@ -3,3 +3,4 @@
     autostage = true
 ['remote "storage"']
     url = gs://mlops_captcha_bucket/
+    version_aware = true
