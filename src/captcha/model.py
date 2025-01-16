@@ -95,7 +95,7 @@ class Resnet18(pl.LightningModule):
         if test_loss is not None and test_acc is not None:
             logger.info(f"\033[36m🧪 Test Results\033[0m - \033[33mLoss: {test_loss:.4f}\033[0m | \033[32mAccuracy: {test_acc:.4f}\033[0m")
 
-@hydra.main(config_path="../../configs", config_name="default_config")
+@hydra.main(config_path="../../configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Trains on dummy data."""
 

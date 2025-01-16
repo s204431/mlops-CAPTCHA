@@ -10,9 +10,10 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 COPY src/ src/
-COPY data/ data/
+COPY data/processed/ data/processed/
 COPY models/ models/
 COPY reports/ reports/
+COPY configs/ configs/
 
 # Set the working directory and install dependencies 
 WORKDIR /
