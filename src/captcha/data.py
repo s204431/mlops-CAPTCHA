@@ -181,7 +181,7 @@ def preprocess() -> None:
 
     logger.info("\033[36mPreprocessing data...")
     dataset = MyDataset(RAW_DATA_PATH)
-    dataset.preprocess(PROCESSED_DATA_PATH, subset_size=10000)
+    dataset.preprocess(PROCESSED_DATA_PATH, subset_size=1000000)
     logger.success("\033[32m ✅Data preprocessing complete.")
 
 def load_data() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset, torch.utils.data.Dataset]:
