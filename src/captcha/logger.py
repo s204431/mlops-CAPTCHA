@@ -9,3 +9,4 @@ logger.add(sys.stdout, format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {messag
 
 # Export the logger for use in other modules
 __all__ = ["logger"]
+
