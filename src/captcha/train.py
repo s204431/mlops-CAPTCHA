@@ -59,10 +59,10 @@ def train(cfg: DictConfig) -> None:
     torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
     # save the model to the outputs directory based on the time of run logged by hydra logger
     logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
-    
+
     # log the model as an artifact in wandb
-    final_test_acc = trainer.callback_metrics['test_acc']
-    final_test_loss = trainer.callback_metrics['test_loss']
+    final_test_acc = trainer.callback_metrics["test_acc"]
+    final_test_loss = trainer.callback_metrics["test_loss"]
     print(final_test_acc, final_test_loss)
     artifact = wandb.Artifact(
         name="captcha_model",
