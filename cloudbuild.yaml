@@ -15,5 +15,7 @@ steps:
     'push',
     'europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training'
   ]
+
+## This is commented out to see the logs
 #options:
 #  logging: CLOUD_LOGGING_ONLY

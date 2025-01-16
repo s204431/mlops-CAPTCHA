@@ -1,3 +1,6 @@
+
+# Hyperparameters for the model
+
 hyperparameters:
-  epochs: 10
-  batch_size: 64
+  epochs: 10             # Number of epochs to train the model
+  batch_size: 64         # Batch size for training
