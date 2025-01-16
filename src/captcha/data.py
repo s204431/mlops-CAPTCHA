@@ -7,10 +7,8 @@ import typer
 import gdown
 from loguru import logger
 from PIL import Image
-from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 from tqdm import tqdm
-from captcha import _ROOT
 from torch.profiler import profile, ProfilerActivity# didnt work for me ->, tensorboard_trace_handler
 
 RAW_DATA_PATH = Path("data/raw")
