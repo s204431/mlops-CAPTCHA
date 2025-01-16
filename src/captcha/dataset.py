@@ -1,7 +1,5 @@
 import torch
-from PIL import Image
 from torch.utils.data import Dataset
-from captcha import _ROOT
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,15 +20,15 @@ def dataset_statistics(datadir: str = "data/processed") -> None:
     test_dataset = CaptchaDataset(datadir, "test")
     class_names = np.array(torch.load(f"{datadir}/class_names.pt"))
 
-    print(f"Train dataset:")
+    print("Train dataset:")
     print(f"Number of images: {len(train_dataset)}")
     print(f"Image shape: {train_dataset[0][0].shape}")
     print("\n")
-    print(f"Validation dataset:")
+    print("Validation dataset:")
     print(f"Number of images: {len(val_dataset)}")
     print(f"Image shape: {val_dataset[0][0].shape}")
     print("\n")
-    print(f"Test dataset:")
+    print("Test dataset:")
     print(f"Number of images: {len(test_dataset)}")
     print(f"Image shape: {test_dataset[0][0].shape}")
     print("\n")
