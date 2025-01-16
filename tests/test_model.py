@@ -1,7 +1,7 @@
 from src.captcha.model import Resnet18
 import torch
 
-# 64% coverage
+# 63% coverage
 
 
 # Test the optimizer configuration
@@ -37,6 +37,14 @@ def test_validation_step():
     model = Resnet18(cfg)
     batch = (torch.rand((32, 1, 224, 224)), torch.randint(0, 20, (32,)))
     model.validation_step(batch)  # Should not raise exceptions
+
+
+# Test for test step
+def test_test_step():
+    cfg = {"_target_": "torch.optim.Adam", "lr": 0.001}
+    model = Resnet18(cfg)
+    batch = (torch.rand((32, 1, 224, 224)), torch.randint(0, 20, (32,)))
+    model.test_step(batch)  # Should not raise exceptions
 
 
 # Test for different batch sizes

@@ -4,7 +4,7 @@ import torch
 from src.captcha.dataset import CaptchaDataset, show_image_and_target
 import numpy as np
 
-# 39% coverage
+# 37% coverage
 
 
 def test_captcha_dataset():
