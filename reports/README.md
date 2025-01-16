@@ -65,7 +65,7 @@ will check the repositories and the code to verify your answers.
 * [x] Write one or multiple configurations files for your experiments (M11)
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12) - Jone
-* [X ] Use logging to log important events in your code (M14) - Petr
+* [X] Use logging to log important events in your code (M14) - Petr
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14) - Michael, Mads
 * [ ] Consider running a hyperparameter optimization sweep (M14) - Mads
 * [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
