@@ -1,5 +1,7 @@
 import torch
 import hydra
+import os
+import wandb
 
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
@@ -12,11 +14,13 @@ from captcha import _ROOT
 from captcha.logger import logger  # Import the configured Loguru logger
 from omegaconf import DictConfig
 from typing import Tuple
+from dotenv import load_dotenv
 
 
 def train(cfg: DictConfig) -> None:
     """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
+    run = wandb.init(project="Captcha")
     data_path = f"{_ROOT}/data/processed/"
     train_set = CaptchaDataset(data_path, "train")
     validation_set = CaptchaDataset(data_path, "validation")
@@ -56,6 +60,19 @@ def train(cfg: DictConfig) -> None:
     # save the model to the outputs directory based on the time of run logged by hydra logger
     logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
 
+    # log the model as an artifact in wandb
+    final_test_acc = trainer.callback_metrics["test_acc"]
+    final_test_loss = trainer.callback_metrics["test_loss"]
+    print(final_test_acc, final_test_loss)
+    artifact = wandb.Artifact(
+        name="captcha_model",
+        type="model",
+        description="A model trained to predict captcha images",
+        metadata={"test accuracy": final_test_acc, "test loss": final_test_loss},
+    )
+    artifact.add_file(f"{_ROOT}/models/model.pth")
+    run.log_artifact(artifact)
+
 
 def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeData]:
     """Loads a dummy dataset."""
@@ -71,9 +88,11 @@ def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeDat
     return train_dataset, val_dataset, test_dataset
 
 
-@hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config")
+@hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Simply runs the training."""
+    load_dotenv()
+    wandb.login(key=os.getenv("WANDB_API_KEY"))
     train(cfg)
 
 
