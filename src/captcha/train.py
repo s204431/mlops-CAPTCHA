@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 def train(cfg: DictConfig) -> None:
     """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
+    run = wandb.init(project="Captcha")
     data_path = f"{_ROOT}/data/processed/"
     train_set = CaptchaDataset(data_path, "train")
     validation_set = CaptchaDataset(data_path, "validation")
@@ -58,6 +59,19 @@ def train(cfg: DictConfig) -> None:
     torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
     # save the model to the outputs directory based on the time of run logged by hydra logger
     logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
+    
+    # log the model as an artifact in wandb
+    final_test_acc = trainer.callback_metrics['test_acc']
+    final_test_loss = trainer.callback_metrics['test_loss']
+    print(final_test_acc, final_test_loss)
+    artifact = wandb.Artifact(
+        name="captcha_model",
+        type="model",
+        description="A model trained to predict captcha images",
+        metadata={"test accuracy": final_test_acc, "test loss": final_test_loss},
+    )
+    artifact.add_file(f"{_ROOT}/models/model.pth")
+    run.log_artifact(artifact)
 
 
 def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeData]:
