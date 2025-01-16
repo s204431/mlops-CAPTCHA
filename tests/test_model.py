@@ -1,6 +1,8 @@
 from src.captcha.model import Resnet18
 import torch
 
+# 64% coverage
+
 
 # Test the optimizer configuration
 def test_optimizer_configuration():
