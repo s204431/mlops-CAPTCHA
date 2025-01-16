@@ -9,7 +9,7 @@ with initialize(version_base=None, config_path="../../configs/optimizer"):
 
 model = Resnet18(cfg_opt)
 path = Path(os.getcwd()).absolute()
-model_checkpoint = f"{path}/models/model_fully_trained.pth"
+model_checkpoint = f"{path}/models/model.pth"
 model.load_state_dict(torch.load(model_checkpoint))
 model.eval()
 dummy_input = torch.randn(1, 1, 52, 32)
