@@ -25,3 +25,4 @@ google_cloud_run==0.10.14
 python-dotenv==1.0.1
 wandb==0.19.2
 matplotlib==3.10.0
+locust==2.32.6
