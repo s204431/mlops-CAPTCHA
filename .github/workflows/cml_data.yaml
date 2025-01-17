@@ -52,7 +52,7 @@ jobs:
         run: |
           # Run your dataset_statistics.py (or main.py) 
           # and capture its console output into a markdown file
-          python dataset_statistics.py > report.md
+          python src/captcha/dataset.py > report.md
 
           # Append inline images to the markdown file 
           # (be sure these PNGs match what your script generates)
