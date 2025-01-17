@@ -97,21 +97,18 @@ def train(cfg: DictConfig) -> None:
     """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
     run = wandb.init(project="Captcha")
+    data_path = f"{_ROOT}/data/processed/"
+    if not data_exists(data_path):
+        data_path = f"{_ROOT}/gcs/mlops_captcha_bucket/data/processed"
 
-    if cfg.get("dummy_data", False):
-        # Load dummy data
-        logger.info("\033[36m📦 Using dummy dataset for training.")
-        train_set, validation_set, test_set = load_dummy()
-    else:
-        # Check and pull data from DVC
-        data_path = f"{_ROOT}/data/processed/"
-        if not pull_data_from_dvc(data_path):
-            logger.error("❌ Could not acquire processed data. Aborting training.")
-            return
-        train_set = CaptchaDataset(data_path, "train")
-        validation_set = CaptchaDataset(data_path, "validation")
-        test_set = CaptchaDataset(data_path, "test")
+    # if not pull_data_from_dvc(data_path):
+    #    logger.error("❌ Could not acquire processed data. Aborting training.")
+    #    return
 
+    train_set = CaptchaDataset(data_path, "train")
+    validation_set = CaptchaDataset(data_path, "validation")
+    test_set = CaptchaDataset(data_path, "test")
+    # train_set, validation_set, test_set = load_dummy()
     train_dataloader = torch.utils.data.DataLoader(
         train_set,
         batch_size=cfg.model.hyperparameters["batch_size"],
