@@ -12,24 +12,52 @@ outs:
   - relpath: processed/class_names.pt
     md5: 308053c38d619aa4f2fe69db7a7f035d
     size: 1008
+    cloud:
+      storage:
+        etag: 08e6becebfc3fc8a031001
+        version_id: '1737109051514726'
   - relpath: processed/test_images.pt
     md5: e15544874ed020d3828c4981193687fb
     size: 67760
+    cloud:
+      storage:
+        etag: 08d4a6d5bfc3fc8a031001
+        version_id: '1737109051626324'
   - relpath: processed/test_labels.pt
     md5: f23b42295fd7b2bbdcb9ae964219ac19
     size: 1264
+    cloud:
+      storage:
+        etag: 08c893d6bfc3fc8a031001
+        version_id: '1737109051640264'
   - relpath: processed/train_images.pt
     md5: 382625233efe4d9c8c16a25a6d2b7cfe
     size: 467125
+    cloud:
+      storage:
+        etag: 08e2e2d7bfc3fc8a031001
+        version_id: '1737109051666786'
   - relpath: processed/train_labels.pt
     md5: fa6f38ee906974569cfb67febd5a4864
     size: 1717
+    cloud:
+      storage:
+        etag: 0895e4d2bfc3fc8a031001
+        version_id: '1737109051585045'
   - relpath: processed/val_images.pt
     md5: 569d26cc344304c0c29467b3378f4dbd
     size: 134315
+    cloud:
+      storage:
+        etag: 08a7f6c3bfc3fc8a031001
+        version_id: '1737109051341607'
   - relpath: processed/val_labels.pt
     md5: 65c61ccf4400aa0510dd816b35c6733e
     size: 1323
+    cloud:
+      storage:
+        etag: 089cb3d3bfc3fc8a031001
+        version_id: '1737109051595164'
   - relpath: raw/data_raw_kaptcha_dataset.zip
     md5: 1f3bb23556a61ec7e4acc951ad0c6330
     size: 192938068
