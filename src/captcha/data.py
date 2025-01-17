@@ -1,24 +1,119 @@
-import random
-from pathlib import Path
-from zipfile import ZipFile
+    import random
+    import subprocess
+    from pathlib import Path
+    from zipfile import ZipFile
 
-import torch
-import typer
-import gdown
-from loguru import logger
-from PIL import Image
-import torchvision.transforms as transforms
-from tqdm import tqdm
-from torch.profiler import profile, ProfilerActivity  # didnt work for me ->, tensorboard_trace_handler
+    import torch
+    import typer
+    import gdown
+    from loguru import logger
+    from PIL import Image
+    import torchvision.transforms as transforms
+    from tqdm import tqdm
+    from torch.profiler import profile, ProfilerActivity  # didnt work for me ->, tensorboard_trace_handler
 
-RAW_DATA_PATH = Path("data/raw")
-PROCESSED_DATA_PATH = Path("data/processed")
+    RAW_DATA_PATH = Path("data/raw")
+    PROCESSED_DATA_PATH = Path("data/processed")
 
+    def push_data_to_dvc(raw_data_path: Path) -> bool:
+        """Push processed data to DVC remote with correct file handling"""
+        logger.info("Starting DVC push process...")
 
-def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
-    """Preprocess the dataset."""
-    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-        output_folder.mkdir(parents=True, exist_ok=True)
+        try:
+            # Try DVC add with verbose flag
+            logger.info("Running dvc add...")
+            result = subprocess.run(
+                ["dvc", "add", str(raw_data_path), "-v"],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            logger.info("DVC add complete: " + result.stdout)
+
+            # Check for either data.dvc or data/processed.dvc
+            dvc_file = Path("data.dvc")
+            alt_dvc_file = Path(f"{raw_data_path}.dvc")
+
+            if dvc_file.exists():
+                actual_dvc_file = dvc_file
+            elif alt_dvc_file.exists():
+                actual_dvc_file = alt_dvc_file
+            else:
+                logger.error(f"DVC add completed but no .dvc file was found")
+                return False
+
+            logger.info(f"Found DVC file at {actual_dvc_file}")
+
+            # Add to git
+            logger.info("Adding to git...")
+            subprocess.run(["git", "add", str(actual_dvc_file)], check=True)
+
+            # Commit changes
+            try:
+                subprocess.run(["git", "commit", "-m", f"Add {raw_data_path} to DVC", "--no-verify"], check=True)
+                logger.info("Changes committed to git")
+            except subprocess.CalledProcessError:
+                logger.warning("Git commit failed - possibly nothing to commit")
+
+            # Push to remote
+            logger.info("Pushing to DVC remote...")
+            push_result = subprocess.run(
+                ["dvc", "push", "--no-run-cache"],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            logger.success("✅ Data pushed to DVC remote.")
+            return True
+
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Command failed: {e.cmd}")
+            if e.stdout:
+                logger.error(f"Command output: {e.stdout}")
+            if e.stderr:
+                logger.error(f"Command error: {e.stderr}")
+            return False
+        except Exception as e:
+            logger.error(f"Unexpected error: {type(e).__name__}: {str(e)}")
+            return False
+
+    def download_extract_dataset_dvc(raw_data_path: Path) -> None:
+        """Downloading the raw data from DVC remote (GCS)"""
+        # Create raw data path if it does not exist
+        raw_data_path.mkdir(parents=True, exist_ok=True)
+
+        # Check if directory is empty
+        is_empty = not raw_data_path.exists() or not any(raw_data_path.iterdir())
+
+        if not is_empty:
+            logger.info(f"'{raw_data_path}' is not empty. Skipping download.")
+            logger.success("✅ Using existing data.")
+            return
+
+        # Directory is empty - pull and extract
+        logger.info("Directory is empty. Pulling and extracting data...")
+        subprocess.run(["dvc", "pull", "--no-run-cache",str(raw_data_path)], check=True)
+        logger.success("✅ Data pulled from GCS using DVC.")
+
+        logger.info("Extracting dataset...")
+        for file in tqdm(raw_data_path.glob("**/*.zip"), desc="Extracting files", unit="file"):
+            with ZipFile(file, "r") as zip_ref:
+                zip_ref.extractall(raw_data_path)
+            file.unlink()
+
+        dataset_folder = raw_data_path / "Dataset"
+        if dataset_folder.exists() and dataset_folder.is_dir():
+            for item in dataset_folder.iterdir():
+                target_path = raw_data_path / item.name
+                item.replace(target_path)
+            dataset_folder.rmdir()
+
+        logger.success("\033[32m✅ Dataset extracted.")
+
+    def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
+        """Preprocess the dataset."""
+    #    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
+    #        output_folder.mkdir(parents=True, exist_ok=True)
 
         img_files = list(input_folder.glob("**/*.png"))
         random.shuffle(img_files)
@@ -94,74 +189,41 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
         logger.info(f"\033[36m  Val:   {val_count} samples")
         logger.info(f"\033[36m  Test:  {test_count} samples")
         logger.info(f"\033[36mFound {len(class_names)} unique classes: {class_names}")
-    print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
+    #print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
 
-def normalize(images: torch.Tensor) -> torch.Tensor:
-    """
-    Normalize a batch of images by subtracting the mean and dividing by the standard deviation.
-    Args:
-        images (torch.Tensor): Batch of images.
-    Returns:
-        torch.Tensor: Normalized images.
-    """
-    return (images - images.mean()) / images.std()
+    def normalize(images: torch.Tensor) -> torch.Tensor:
+        """
+        Normalize a batch of images by subtracting the mean and dividing by the standard deviation.
+        Args:
+            images (torch.Tensor): Batch of images.
+        Returns:
+            torch.Tensor: Normalized images.
+        """
+        return (images - images.mean()) / images.std()
 
 
-def download_extract_dataset(raw_data_path: Path, zip_url: str) -> None:
-    """Download and extract the dataset."""
-    # If folder is not empty, skip download
-    if raw_data_path.exists() and any(raw_data_path.iterdir()):
-        logger.info(f"'{raw_data_path}' is not empty. Skipping download & extraction...")
-        return
-
-    logger.info(f"Downloading dataset from Google Drive to {zip_url}...")
-    raw_data_path.mkdir(parents=True, exist_ok=True)
-
-    zip_path = raw_data_path / "dataset.zip"
-    gdown.download(zip_url, str(zip_path), quiet=False)
-
-    # extract the dataset.zip file
-    logger.info("Extracting dataset...")
-    with ZipFile(zip_path, "r") as zip_ref:
-        for file in tqdm(zip_ref.namelist(), desc="Extracting files", unit="file"):
-            zip_ref.extract(member=file, path=raw_data_path)
-
-    # Remove the zip file after excectracting
-    zip_path.unlink()
-    logger.success("\033[32m✅ Dataset extracted.")
-
-    # Remove the extracted `Dataset` folder
-    extracted_folder = raw_data_path / "Dataset"
-    if extracted_folder.exists() and extracted_folder.is_dir():
-        for item in extracted_folder.iterdir():
-            target_path = raw_data_path / item.name
-            item.replace(target_path)
-        extracted_folder.rmdir()
-    logger.info("\033[36mFiles moved and `Dataset` folder deleted.")
-
-    for file in list(raw_data_path.glob("**/*.png")):
-        if file.parent != raw_data_path:
-            new_path = raw_data_path / file.name
-            file.replace(new_path)
-
-    logger.info(f"\033[36mAll PNG files moves to {RAW_DATA_PATH}")
+    def preprocess() -> None:
+        """Preprocess the CAPTCHA dataset."""
+        download_extract_dataset_dvc(RAW_DATA_PATH)
 
 
-def preprocess() -> None:
-    """Preprocess the CAPTCHA dataset."""
-    zip_url = "https://drive.google.com/uc?id=1HyOhjM2WgmRucD-czc3UzTaFBAtx7-ae"
-    download_extract_dataset(RAW_DATA_PATH, zip_url=zip_url)
+        print(len(list(RAW_DATA_PATH.glob("**/*.png"))))
+        logger.info("\033[36mPreprocessing data...")
+        preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size= 100)#len(list(RAW_DATA_PATH.glob("**/*.png"))))
+        logger.success("\033[32m ✅Data preprocessing complete.")
 
-    logger.info("\033[36mPreprocessing data...")
-    preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=1000000)
-    logger.success("\033[32m ✅Data preprocessing complete.")
-
-
-def main():
-    """Main function. Preprocesses the data."""
-    typer.run(preprocess)
+    # Push processed data to DVC and check success
+        if push_data_to_dvc(PROCESSED_DATA_PATH):
+            logger.success("\033[32m✅ Data preprocessing and DVC push complete.")
+        else:
+            logger.error("\033[31m❌ Data preprocessing complete but DVC push failed.")
 
 
-if __name__ == "__main__":
-    main()
+
+    def main():
+        """Main function. Preprocesses the data."""
+        typer.run(preprocess)
+
+    if __name__ == "__main__":
+        main()

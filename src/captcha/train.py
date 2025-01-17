@@ -1,6 +1,8 @@
 import torch
 import hydra
+from pathlib import Path
 import os
+import subprocess
 import wandb
 
 # from captcha.dataloader import load_data
@@ -17,11 +19,73 @@ from typing import Tuple
 from dotenv import load_dotenv
 
 
+def pull_data_from_dvc(data_path: str | Path) -> bool:
+    """
+    Check if processed data exists, if not pull from DVC.
+
+    Args:
+        data_path: Path to the processed data directory (can be string or Path)
+    Returns:
+        bool: True if data is available or successfully pulled
+    """
+    # Convert to Path object if string
+    path = Path(data_path)
+
+    logger.info("\033[36m📥 Checking for Processed data...")
+
+    if path.exists() and any(path.iterdir()):
+        # Verify essential files are present
+        required_files = [
+            "train_images.pt",
+            "train_labels.pt",
+            "val_images.pt",
+            "val_labels.pt",
+            "test_images.pt",
+            "test_labels.pt",
+            "class_names.pt",
+        ]
+
+        missing_files = [f for f in required_files if not (path / f).exists()]
+
+        if not missing_files:
+            logger.info("\033[36m📦 Found processed data.")
+            return True
+
+        logger.info("\033[36m📦 Some required files are missing.")
+
+    else:
+        logger.info("\033[36m📦 Processed data directory is empty or doesn't exist.")
+
+    # Try to pull from DVC
+    logger.info("\033[36m📦 Pulling processed data from DVC...")
+
+    try:
+        subprocess.run(["dvc", "pull", "--no-run-cache", str(path)], check=True)
+        logger.success("\033[36m📦 Data pulled from DVC.")
+
+        if path.exists() and any(path.iterdir()):
+            logger.success("\033[36m📦 Successfully processed data.")
+            return True
+        else:
+            logger.error("❌ DVC pull completed but data directory is still empty.")
+            return False
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Failed to pull data from DVC: {e.stderr}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error while pulling data: {str(e)}")
+        return False
+
+
 def train(cfg: DictConfig) -> None:
     """Trains the model."""
     logger.info("\033[36m🚀 Starting training...")
     run = wandb.init(project="Captcha")
     data_path = f"{_ROOT}/data/processed/"
+    if not pull_data_from_dvc(data_path):
+        logger.error("❌ Could not acquire processed data. Aborting training.")
+        return
     train_set = CaptchaDataset(data_path, "train")
     validation_set = CaptchaDataset(data_path, "validation")
     test_set = CaptchaDataset(data_path, "test")
@@ -44,8 +108,8 @@ def train(cfg: DictConfig) -> None:
 
     trainer = pl.Trainer(
         max_epochs=cfg.model.hyperparameters["epochs"],
-        limit_train_batches=0.1,
-        limit_val_batches=0.1,
+        # limit_train_batches=0.1,
+        # limit_val_batches=0.1,
         # callbacks=[early_stopping_callback],
         logger=pl.loggers.WandbLogger(project="Captcha"),
         enable_progress_bar=False,
