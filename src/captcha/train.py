@@ -108,8 +108,8 @@ def train(cfg: DictConfig) -> None:
 
     trainer = pl.Trainer(
         max_epochs=cfg.model.hyperparameters["epochs"],
-        # limit_train_batches=0.1,
-        # limit_val_batches=0.1,
+        limit_train_batches=0.1,
+        limit_val_batches=0.1,
         # callbacks=[early_stopping_callback],
         logger=pl.loggers.WandbLogger(project="Captcha"),
         enable_progress_bar=False,

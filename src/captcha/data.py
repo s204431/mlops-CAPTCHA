@@ -14,6 +14,7 @@ RAW_DATA_PATH = Path("data/raw")
 PROCESSED_DATA_PATH = Path("data/processed")
 
 
+
 def push_data_to_dvc(raw_data_path: Path) -> bool:
     """Push processed data to DVC remote with correct file handling"""
     logger.info("Starting DVC push process...")
@@ -147,7 +148,9 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
                 img_tensor = transform(img)
                 images.append(img_tensor)
                 labels.append(label_int)
+
         images = torch.stack(images)  # Stack to (N, C, H, W)
+        images = normalize(images)
         labels = torch.tensor(labels)  # Labels to tensor
         return images, labels
 
@@ -202,7 +205,7 @@ def preprocess() -> None:
 
     print(len(list(RAW_DATA_PATH.glob("**/*.png"))))
     logger.info("\033[36mPreprocessing data...")
-    preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=100)  # len(list(RAW_DATA_PATH.glob("**/*.png"))))
+    preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=len(list(RAW_DATA_PATH.glob("**/*.png"))))
     logger.success("\033[32m ✅Data preprocessing complete.")
 
     # Push processed data to DVC and check success
