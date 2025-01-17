@@ -118,7 +118,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+Group 68
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -129,7 +129,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+s204431, ..., ..., ..., ...
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -143,7 +143,8 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party framework PyTorch Image Models (TIMM) in our project. From the framework we used a pre-trained image classification model. The pre-trained model, that was used in this project, was built using the architechture of ResNet18. The pre-trained model was afterwards fine-tuned for predicting Captcha images.
+The reason for using a pre-trained model was mainly to utilize the pre-trained weights to improve the training speed. Additionally, using the ResNet architechture, we make sure that training is stable and that we don't have to nudge as many hyperparameters to still get the model to work well. A bonus is that the TIMM framework was really easy to use and that we avoid problems like vanishing gradients without having to actively take it into consideration.
 
 ## Coding environment
 
@@ -163,7 +164,14 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+In order to manage dependencies in our project we used requirement files. We have four different requirement files: requirements.txt, requirements_dev.txt, requirements_backend.txt and requirements_frontend.txt. The requirements.txt files is the most important since it contains the essential requirements for running the code. The requirements_dev.txt file contains additional dependencies that are not necessary for running the code, but may be useful for a developer of the project. The remaining two are dependencies for the backend and frontend respectively and are simply subsets of the requirements.txt file such that the docker images do not contain unnecessary dependencies.
+A new member of the team would need to execute the following commands to get a copy of the environment:
+git clone https://github.com/s204431/mlops-CAPTCHA
+pip install -e .
+dvc pull
+pre-commit install
+
+Note that this assumes that the team member has already installed python version 3.11 or greater and pip.
 
 ### Question 5
 
@@ -194,7 +202,8 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 6 fill here ---
+We used ruff for both linting and formatting following the pep8 convention. We have set this up such that it works automatically using pre-commit to run ruff checks each time a team member uses git commit. We have also set up automatic code checking using Github actions, such that Github actions runs ruff checking each time we push to the repository and fixes potential issues. For typing we have used typing on the inputs and outputs of functions. For documentation we have added a comment to each function explaining what it does and some comments internally in functions.
+These concepts are important since it makes it much easier for someone who has not worked on the code to understand the code since it follows common conventions. Documentation and typing also makes it easier for developers of the code to still understand it when they haven't worked on it in a while. This is especially useful in larger projects, where there is a large amount of code to understand and a large number of people.
 
 ## Version control
 
@@ -213,7 +222,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 7 fill here ---
+We implemented tests for most of the code. In total we have 14 tests for the model, data, training and APIs which we find to be the most important parts of the code. The API tests include tests for the backend and frontend which ensure that the APIs are running and returning the expected data. We also have locust files for load testing.
 
 ### Question 8
 
@@ -243,7 +252,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 9 fill here ---
+We made use of branches for some parts of our projects. This was in particular when working on a new feature for the project. When the feature was finished we would merge the branch into the main branch. However, we could have been more disciplined with remembering to always use branches for new features. We did not really use pull requests. The main reason for this is because the project is quite small and we are working in a relatively small team and trust all team members. For larger projects it may be more beneficial to use these features more as they ensure that the main branch is kept clean. Pull requests can also ensure that non-working code is not pushed onto the main branch and can allow untrusted users to contribute.
 
 ### Question 10
 
@@ -258,7 +267,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 10 fill here ---
+Yes we made use of DVC for version control of our data. We have stored both the raw data and the processed data in the cloud. We have then used DVC for pulling data from the cloud and pushing new data in case the data gets updated. It would also make it easy to get the data in case a new member joins the team. However, it has not been used much during the project because the data that we have used would typically not be changed. We have used a dataset from Kaggle and thus the data would not change during the project. In a bigger project it may be more beneficial, especially if new data is being collected frequently.
 
 ### Question 11
 
@@ -294,7 +303,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 12 fill here ---
+We have used Hydra for managing config files and running experiments. This would make it quite easy to run experiments. The code is simply run normally and a new folder with information about the experiment would be stored. The config files can be changed in order to change the parameters. We have config files for training parameters and optimizer parameters.
 
 ### Question 13
 
@@ -356,7 +365,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 16 fill here ---
+Each group member had their own way of debugging the code. Some used the built-in debugger in Visual Studio Code and some just used print statements and logs. This worked fine and we did not have bugs that took too long to solve. We have set up some profiling for the evaluation of the model in order to check if there was a bottle-neck in the model. This did not show any significant bottle-neck. We have also made use of pytorch-lightning and the Timm framework, which means that there were many parts of the code that we did not make ourselves and therefore we cannot change these parts despite what the profiling shows. Overall, we think that are code works well without any major bottle-necks.
 
 ## Working in the cloud
 
