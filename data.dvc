@@ -2,66 +2,52 @@ outs:
 - hash: md5
   path: data
   files:
-  - relpath: .gitignore
-    md5: 5f698c653985bf59afd5a15c8c5cb84a
-    size: 12
-    cloud:
-      storage:
-        etag: 088c8ffebf95fb8a031001
-        version_id: '1737062344525708'
   - relpath: processed/class_names.pt
-    md5: 308053c38d619aa4f2fe69db7a7f035d
+    md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
     cloud:
       storage:
-        etag: 08e6becebfc3fc8a031001
-        version_id: '1737109051514726'
+        etag: 08b8d181b2d5fc8a031001
+        version_id: '1737113854830776'
   - relpath: processed/test_images.pt
-    md5: e15544874ed020d3828c4981193687fb
-    size: 67760
+    md5: 53a3c3ccfeb99f65c3e012e38010bb69
+    size: 78648496
     cloud:
       storage:
-        etag: 08d4a6d5bfc3fc8a031001
-        version_id: '1737109051626324'
+        etag: 08a5b2f0b1d5fc8a031001
+        version_id: '1737113854548261'
   - relpath: processed/test_labels.pt
-    md5: f23b42295fd7b2bbdcb9ae964219ac19
-    size: 1264
+    md5: 7a999c0c3ffb523c3cc3e174639c2074
+    size: 95728
     cloud:
       storage:
-        etag: 08c893d6bfc3fc8a031001
-        version_id: '1737109051640264'
+        etag: 08e7da82b2d5fc8a031001
+        version_id: '1737113854848359'
   - relpath: processed/train_images.pt
-    md5: 382625233efe4d9c8c16a25a6d2b7cfe
-    size: 467125
+    md5: 08ec1096349656c43fcf810c61fdd8e1
+    size: 550572213
     cloud:
       storage:
-        etag: 08e2e2d7bfc3fc8a031001
-        version_id: '1737109051666786'
+        etag: 088cddd4bfd5fc8a031001
+        version_id: '1737113883455116'
   - relpath: processed/train_labels.pt
-    md5: fa6f38ee906974569cfb67febd5a4864
-    size: 1717
+    md5: ccb17c0fc2ab713a4dc98c3863d0fcc1
+    size: 662901
     cloud:
       storage:
-        etag: 0895e4d2bfc3fc8a031001
-        version_id: '1737109051585045'
+        etag: 0883a3feb1d5fc8a031001
+        version_id: '1737113854775683'
   - relpath: processed/val_images.pt
-    md5: 569d26cc344304c0c29467b3378f4dbd
-    size: 134315
+    md5: a564f4a3dd010d074637fd643a87e681
+    size: 157302443
     cloud:
       storage:
-        etag: 08a7f6c3bfc3fc8a031001
-        version_id: '1737109051341607'
+        etag: 08aff891bad5fc8a031001
+        version_id: '1737113871875119'
   - relpath: processed/val_labels.pt
-    md5: 65c61ccf4400aa0510dd816b35c6733e
-    size: 1323
+    md5: a554dbdfbd8f421144ef426f76b0bb1f
+    size: 190251
     cloud:
       storage:
-        etag: 089cb3d3bfc3fc8a031001
-        version_id: '1737109051595164'
-  - relpath: raw/data_raw_kaptcha_dataset.zip
-    md5: 1f3bb23556a61ec7e4acc951ad0c6330
-    size: 192938068
-    cloud:
-      storage:
-        etag: 08e28fb9f095fb8a031001
-        version_id: '1737062446155746'
+        etag: 08c4d785b2d5fc8a031001
+        version_id: '1737113854897092'

@@ -100,5 +100,9 @@ class CaptchaDataset(Dataset):
         return self.images.shape[0]
 
 
-if __name__ == "__main__":
+def main():
     dataset_statistics()
+
+
+if __name__ == "__main__":
+    main()
