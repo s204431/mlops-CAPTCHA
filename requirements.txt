@@ -26,3 +26,5 @@ python-dotenv==1.0.1
 wandb==0.19.2
 matplotlib==3.10.0
 locust==2.32.6
+dvc==3.59.0
+dvc-gs==3.0.1
