@@ -13,8 +13,6 @@ on:
       - 'data/**/*.dvc'
       - '.dvc/**'
       - 'data/'
-
-
 jobs:
   dataset_statistics:
     runs-on: ubuntu-latest
