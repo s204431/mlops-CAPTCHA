@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip list 
+          pip list
           make dev_requirements
 
       - name: Auth with GCP
@@ -50,11 +50,11 @@ jobs:
 
       - name: Check data statistics & generate report
         run: |
-          # Run your dataset_statistics.py (or main.py) 
+          # Run your dataset_statistics.py (or main.py)
           # and capture its console output into a markdown file
           python src/captcha/dataset.py > report.md
 
-          # Append inline images to the markdown file 
+          # Append inline images to the markdown file
           # (be sure these PNGs match what your script generates)
           echo '' >> report.md
           echo '![CAPTCHA images](./captcha_images.png "CAPTCHA images")' >> report.md
