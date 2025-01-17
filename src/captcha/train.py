@@ -19,14 +19,14 @@ from typing import Tuple
 from dotenv import load_dotenv
 
 
-def pull_data_from_dvc(data_path: str | Path) -> bool:
+def data_exists(data_path: str | Path) -> bool:
     """
-    Check if processed data exists, if not pull from DVC.
+    Check if processed data exists.
 
     Args:
         data_path: Path to the processed data directory (can be string or Path)
     Returns:
-        bool: True if data is available or successfully pulled
+        bool: True if data is available
     """
     # Convert to Path object if string
     path = Path(data_path)
@@ -52,9 +52,24 @@ def pull_data_from_dvc(data_path: str | Path) -> bool:
             return True
 
         logger.info("\033[36m📦 Some required files are missing.")
+        return False
 
     else:
         logger.info("\033[36m📦 Processed data directory is empty or doesn't exist.")
+        return False
+
+
+def pull_data_from_dvc(data_path: str | Path) -> bool:
+    """
+    Pulls the data using dvc.
+
+    Args:
+        data_path: Path to the processed data directory (can be string or Path)
+    Returns:
+        bool: True if data is available or successfully pulled
+    """
+    # Convert to Path object if string
+    path = Path(data_path)
 
     # Try to pull from DVC
     logger.info("\033[36m📦 Pulling processed data from DVC...")
@@ -83,9 +98,13 @@ def train(cfg: DictConfig) -> None:
     logger.info("\033[36m🚀 Starting training...")
     run = wandb.init(project="Captcha")
     data_path = f"{_ROOT}/data/processed/"
-    if not pull_data_from_dvc(data_path):
-        logger.error("❌ Could not acquire processed data. Aborting training.")
-        return
+    if not data_exists(data_path):
+        data_path = f"{_ROOT}/gcs/mlops_captcha_bucket/data/processed"
+
+    # if not pull_data_from_dvc(data_path):
+    #    logger.error("❌ Could not acquire processed data. Aborting training.")
+    #    return
+
     train_set = CaptchaDataset(data_path, "train")
     validation_set = CaptchaDataset(data_path, "validation")
     test_set = CaptchaDataset(data_path, "test")
@@ -103,8 +122,8 @@ def train(cfg: DictConfig) -> None:
     test_dataloader = torch.utils.data.DataLoader(
         test_set, batch_size=cfg.model.hyperparameters["batch_size"], num_workers=4, persistent_workers=True
     )
-    model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule
-    # early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
+
+    model = Resnet18(cfg.optimizer.Adam_opt)  # LightningModule
 
     trainer = pl.Trainer(
         max_epochs=cfg.model.hyperparameters["epochs"],
@@ -113,19 +132,17 @@ def train(cfg: DictConfig) -> None:
         # callbacks=[early_stopping_callback],
         logger=pl.loggers.WandbLogger(project="Captcha"),
         enable_progress_bar=False,
-    )  # this is our Trainer
+    )  # Trainer
     trainer.fit(model, train_dataloader, validation_dataloader)
     logger.info("\033[36m🏁 Training completed. Starting testing...")
     trainer.test(model, test_dataloader)
-    # trainer.test(model, test_dataloader)
     logger.info("\033✅ Testing completed.")
     torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
-    # save the model to the outputs directory based on the time of run logged by hydra logger
     logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
 
-    # log the model as an artifact in wandb
-    final_test_acc = trainer.callback_metrics["test_acc"]
-    final_test_loss = trainer.callback_metrics["test_loss"]
+    # Log model as an artifact
+    final_test_acc = trainer.callback_metrics.get("test_acc", None)
+    final_test_loss = trainer.callback_metrics.get("test_loss", None)
     print(final_test_acc, final_test_loss)
     artifact = wandb.Artifact(
         name="captcha_model",

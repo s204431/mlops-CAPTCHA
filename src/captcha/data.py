@@ -14,7 +14,6 @@ RAW_DATA_PATH = Path("data/raw")
 PROCESSED_DATA_PATH = Path("data/processed")
 
 
-
 def push_data_to_dvc(raw_data_path: Path) -> bool:
     """Push processed data to DVC remote with correct file handling"""
     logger.info("Starting DVC push process...")
@@ -105,7 +104,7 @@ def download_extract_dataset_dvc(raw_data_path: Path) -> None:
 def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
     """Preprocess the dataset."""
     #    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-    #        output_folder.mkdir(parents=True, exist_ok=True)
+    output_folder.mkdir(parents=True, exist_ok=True)
 
     img_files = list(input_folder.glob("**/*.png"))
     random.shuffle(img_files)

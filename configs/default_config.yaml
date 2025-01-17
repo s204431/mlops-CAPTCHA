@@ -1,5 +1,6 @@
 
 # Default configuration file for the project
+dummy_data: False                   # Dummy data to be used
 
 defaults:
 - model: model                      # Model to be used
