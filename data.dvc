@@ -1,6 +1,39 @@
 outs:
-- md5: d34eed0e05c0e31847b51e98ebfceea4.dir
-  size: 980411120
-  nfiles: 9
-  hash: md5
+- hash: md5
   path: data
+  files:
+  - relpath: .gitignore
+    md5: 5f698c653985bf59afd5a15c8c5cb84a
+    size: 12
+    cloud:
+      storage:
+        etag: 088c8ffebf95fb8a031001
+        version_id: '1737062344525708'
+  - relpath: processed/class_names.pt
+    md5: 308053c38d619aa4f2fe69db7a7f035d
+    size: 1008
+  - relpath: processed/test_images.pt
+    md5: e15544874ed020d3828c4981193687fb
+    size: 67760
+  - relpath: processed/test_labels.pt
+    md5: f23b42295fd7b2bbdcb9ae964219ac19
+    size: 1264
+  - relpath: processed/train_images.pt
+    md5: 382625233efe4d9c8c16a25a6d2b7cfe
+    size: 467125
+  - relpath: processed/train_labels.pt
+    md5: fa6f38ee906974569cfb67febd5a4864
+    size: 1717
+  - relpath: processed/val_images.pt
+    md5: 569d26cc344304c0c29467b3378f4dbd
+    size: 134315
+  - relpath: processed/val_labels.pt
+    md5: 65c61ccf4400aa0510dd816b35c6733e
+    size: 1323
+  - relpath: raw/data_raw_kaptcha_dataset.zip
+    md5: 1f3bb23556a61ec7e4acc951ad0c6330
+    size: 192938068
+    cloud:
+      storage:
+        etag: 08e28fb9f095fb8a031001
+        version_id: '1737062446155746'
