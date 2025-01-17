@@ -382,7 +382,15 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 17 fill here ---
+Compute Engine
+Cloud Storage
+Artifact Registry
+Cloud Build
+Vertex AI
+Secret Manager (maybe?)
+Cloud Logging (maybe?)
+Not sure if we used any more services worth mentioning...
+
 
 ### Question 18
 
@@ -406,7 +414,7 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 19 fill here ---
+[this figure](figures/captcha-bucket.png)
 
 ### Question 20
 
@@ -415,7 +423,7 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 20 fill here ---
+[this figure](figures/captcha-artifact-registry.png)
 
 ### Question 21
 
