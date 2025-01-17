@@ -6,6 +6,14 @@ on:
     paths:
       - 'data/**/*.dvc'
       - '.dvc/**'
+      - 'data/'
+  pull_request_target:
+    branches: [ main ]
+    paths:
+      - 'data/**/*.dvc'
+      - '.dvc/**'
+      - 'data/'
+
 
 jobs:
   dataset_statistics:
@@ -13,8 +21,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -42,4 +48,30 @@ jobs:
         run: |
           python scr/captcha/dataset.py
 
+      - name: Check data statistics & generate report
+        run: |
+          # Run your dataset_statistics.py (or main.py) 
+          # and capture its console output into a markdown file
+          python dataset_statistics.py > report.md
 
+          # Append inline images to the markdown file 
+          # (be sure these PNGs match what your script generates)
+          echo '' >> report.md
+          echo '![CAPTCHA images](./captcha_images.png "CAPTCHA images")' >> report.md
+          echo '' >> report.md
+          echo '![Train label distribution](./train_label_distribution.png "Train label distribution")' >> report.md
+          echo '' >> report.md
+          echo '![Val label distribution](./val_label_distribution.png "Val label distribution")' >> report.md
+          echo '' >> report.md
+          echo '![Test label distribution](./test_label_distribution.png "Test label distribution")' >> report.md
+
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
+
+
+      - name: Comment on PR
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cml comment create data_statistics.md --watermark-title="Data Checker" # (1)!
+      
