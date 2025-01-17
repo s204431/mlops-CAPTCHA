@@ -50,7 +50,7 @@ def train(cfg: DictConfig) -> None:
         logger=pl.loggers.WandbLogger(project="Captcha"),
         enable_progress_bar=False,
     )  # this is our Trainer
-
+    logger.info(f"\033[36m🟢 Training over {cfg.model.hyperparameters["epochs"]} epochs...")
     trainer.fit(model, train_dataloader, validation_dataloader)
     logger.info("\033[36m🏁 Training completed. Starting testing...")
     trainer.test(model, test_dataloader)
