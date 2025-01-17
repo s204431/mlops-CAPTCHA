@@ -18,12 +18,12 @@
     def push_data_to_dvc(raw_data_path: Path) -> bool:
         """Push processed data to DVC remote with correct file handling"""
         logger.info("Starting DVC push process...")
-        
+
         try:
             # Try DVC add with verbose flag
             logger.info("Running dvc add...")
             result = subprocess.run(
-                ["dvc", "add", str(raw_data_path), "-v"], 
+                ["dvc", "add", str(raw_data_path), "-v"],
                 check=True,
                 capture_output=True,
                 text=True
@@ -33,7 +33,7 @@
             # Check for either data.dvc or data/processed.dvc
             dvc_file = Path("data.dvc")
             alt_dvc_file = Path(f"{raw_data_path}.dvc")
-            
+
             if dvc_file.exists():
                 actual_dvc_file = dvc_file
             elif alt_dvc_file.exists():
@@ -47,7 +47,7 @@
             # Add to git
             logger.info("Adding to git...")
             subprocess.run(["git", "add", str(actual_dvc_file)], check=True)
-            
+
             # Commit changes
             try:
                 subprocess.run(["git", "commit", "-m", f"Add {raw_data_path} to DVC", "--no-verify"], check=True)
@@ -58,7 +58,7 @@
             # Push to remote
             logger.info("Pushing to DVC remote...")
             push_result = subprocess.run(
-                ["dvc", "push", "--no-run-cache"], 
+                ["dvc", "push", "--no-run-cache"],
                 check=True,
                 capture_output=True,
                 text=True
@@ -82,7 +82,7 @@
         # Create raw data path if it does not exist
         raw_data_path.mkdir(parents=True, exist_ok=True)
 
-        # Check if directory is empty 
+        # Check if directory is empty
         is_empty = not raw_data_path.exists() or not any(raw_data_path.iterdir())
 
         if not is_empty:
@@ -107,7 +107,7 @@
                 target_path = raw_data_path / item.name
                 item.replace(target_path)
             dataset_folder.rmdir()
-        
+
         logger.success("\033[32m✅ Dataset extracted.")
 
     def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 10000) -> None:
