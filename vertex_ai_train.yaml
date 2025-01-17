@@ -17,7 +17,7 @@ steps:
   args:
     - '-c'
     - |
-      cat config.yaml
+       cat config.yaml
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'Train on vertex AI'
@@ -37,5 +37,5 @@ substitutions:
   _VERTEX_TRAIN_CONFIG: 'config.yaml'
 availableSecrets:
   secretManager:
-  - versionName: projects/$PROJECT_ID/secrets/WANDB_API_KEY/versions/latest
+  - versionName: projects/mlops-captcha/secrets/WANDB_API_KEY/versions/latest
     env: 'WANDB_API_KEY'

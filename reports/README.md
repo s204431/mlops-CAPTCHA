@@ -432,7 +432,7 @@ Not sure if we used any more services worth mentioning...
 >
 > Answer:
 
---- question 21 fill here ---
+[this figure](captcha-cloud-build/build.png)
 
 ### Question 22
 
