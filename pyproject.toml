@@ -35,3 +35,4 @@ omit = ["tests/*"]
 train = "captcha.train:main"
 evaluate = "captcha.evaluate:main"
 data = "captcha.data:main"
+statistics = "captcha.dataset:main"
