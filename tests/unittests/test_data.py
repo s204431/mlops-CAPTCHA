@@ -4,8 +4,6 @@ import tempfile
 from pathlib import Path
 from PIL import Image
 
-# 70% coverage
-
 
 # Test the preprocess_raw function on some sample data
 def test_preprocess_raw_sample_data():

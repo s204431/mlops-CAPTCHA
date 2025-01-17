@@ -6,6 +6,7 @@ import torch
 from captcha.train import train, load_dummy
 from omegaconf import OmegaConf
 from torch.utils.data import Dataset
+import os
 
 # 95% coverage
 
@@ -36,40 +37,39 @@ class DummyModel(nn.Module):
 
 
 def test_train():
-    # Create a temporary directory for testing outputs
+    os.environ["WANDB_MODE"] = "dryrun"
     with tempfile.TemporaryDirectory() as temp_dir:
-        # Mock _ROOT to point to temporary directory
         with patch("captcha.train._ROOT", temp_dir):
-            # Ensure models directory exists
             models_dir = Path(temp_dir) / "models"
             models_dir.mkdir(parents=True, exist_ok=True)
 
-            # Replace CaptchaDataset with a dummy dataset
             with (
                 patch("captcha.train.CaptchaDataset", side_effect=lambda *_: DummyDataset()),
                 patch("captcha.train.Resnet18", return_value=DummyModel()),
                 patch("captcha.train.pl.Trainer") as MockTrainer,
             ):
-                # Mock Trainer
                 trainer_instance = MockTrainer.return_value
-                trainer_instance.fit.return_value = None
-                trainer_instance.test.return_value = None
+                trainer_instance.fit.side_effect = lambda *args, **kwargs: print("Trainer.fit called")
+                trainer_instance.test.side_effect = lambda *args, **kwargs: print("Trainer.test called")
 
-                # Config for testing
+                # Default configuration
                 cfg = OmegaConf.create(
                     {
+                        "dummy_data": True,
+                        "defaults": [{"model": "model"}, {"optimizer": "Adam_opt"}],
+                        "optimizer": {"Adam_opt": {"_target_": "torch.optim.Adam", "lr": 1e-3}},
                         "model": {"hyperparameters": {"batch_size": 2, "epochs": 1}},
-                        "optimizer": {"Adam_opt": {"lr": 0.001}},
                     }
                 )
 
-                # Run the train function
+                # Run the training function
                 train(cfg)
 
                 # Assertions
                 trainer_instance.fit.assert_called_once()
                 trainer_instance.test.assert_called_once()
-                assert (models_dir / "model.pth").exists()
+                print(f"Model saved to: {models_dir / 'model.pth'}")
+                assert (models_dir / "model.pth").exists(), "Model was not saved as expected"
 
 
 def test_load_dummy():
