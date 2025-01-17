@@ -3,17 +3,7 @@ from locust import HttpUser, between, task
 import numpy as np
 from PIL import Image
 from pathlib import Path
-
-
-def normalize(image: np.array) -> np.array:
-    """
-    Normalize an image by subtracting the mean and dividing by the standard deviation.
-    Args:
-        images (np.array): Image.
-    Returns:
-        np.array: Normalized image.
-    """
-    return (image - image.mean()) / image.std()
+from captcha.utils import normalize
 
 
 class User(HttpUser):
