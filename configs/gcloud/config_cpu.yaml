@@ -5,3 +5,6 @@ workerPoolSpecs:
     replicaCount: 1
     containerSpec:
         imageUri: europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training
+        env:
+        - name: WANDB_API_KEY
+          value: $WANDB_API_KEY
