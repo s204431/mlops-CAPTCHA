@@ -26,7 +26,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install -e .
           pip list 
           make dev_requirements
 
@@ -41,5 +40,5 @@ jobs:
 
       - name: Check data statistics
         run: |
-          statistics
+          python scr/captcha/dataset.py
 
