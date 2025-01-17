@@ -68,10 +68,8 @@ jobs:
       - name: Setup CML
         uses: iterative/setup-cml@v2
 
-
       - name: Comment on PR
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cml comment create data_statistics.md --watermark-title="Data Checker" # (1)!
-      
