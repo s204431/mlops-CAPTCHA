@@ -28,9 +28,12 @@ jobs:
       WANDB_PROJECT: ${{ secrets.WANDB_PROJECT }}
       MODEL_NAME: ${{ needs.identify_event.outputs.model_name }}
     steps:
-    - name: Echo model name
+    - name: Echo model name and entity name ...
       run: |
         echo "Model name: $MODEL_NAME"
+        echo "Entity name: $WANDB_ENTITY"
+        echo "Project: $WANDB_PROJECT"
+        echo "API key: $WANDB_API_KEY"
     - name: Checkout code
       uses: actions/checkout@v4
 
