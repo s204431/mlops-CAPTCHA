@@ -165,11 +165,11 @@ The reason for using a pre-trained model was mainly to utilize the pre-trained w
 > Answer:
 
 In order to manage dependencies in our project we used requirement files. We have four different requirement files: requirements.txt, requirements_dev.txt, requirements_backend.txt and requirements_frontend.txt. The requirements.txt files is the most important since it contains the essential requirements for running the code. The requirements_dev.txt file contains additional dependencies that are not necessary for running the code, but may be useful for a developer of the project. The remaining two are dependencies for the backend and frontend respectively and are simply subsets of the requirements.txt file such that the docker images do not contain unnecessary dependencies.
-A new member of the team would need to execute the following commands to get a copy of the environment:
-git clone https://github.com/s204431/mlops-CAPTCHA
-pip install -e .
-dvc pull
-pre-commit install
+A new member of the team would need to execute the following commands to get a copy of the environment:\
+git clone https://github.com/s204431/mlops-CAPTCHA\
+pip install -e .\
+dvc pull\
+pre-commit install\
 
 Note that this assumes that the team member has already installed python version 3.11 or greater and pip.
 
@@ -456,7 +456,7 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 23 fill here ---
+Yes we managed to write an API for the model. We have made both a backend and frontend for inference of the model. The backend is the main API used for making predictions. For this, we make use of onnx and bentoml. The onnx library is used to convert the model into a simpler version designed for inference such that we do not need to include the Pytorch library in the docker image for the backend. The bentoml library is used to create the API itself. We have created a service with 2 workers such that it can handle requests concurrently. It has a single /predict endpoint. In order to use the endpoint an image must be sent in a POST request and it must have the correct format. That is, it must be a 32*52 image with a single channel. The returned data is a list of probabilities for each of the 20 possible classes.
 
 ### Question 24
 
@@ -472,7 +472,8 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 24 fill here ---
+Yes we have managed to deploy the API in the cloud. It was deployed by first containerizing the bentoml service using docker. Then, the docker image was pushed to artifact registry for the project in Google Cloud. Finally, the service was deployed using cloud run. The service works by receiving an image in a POST request. The link to the service is: https://backend-1048604560911.europe-west1.run.app \
+The service has a single endpoint at /predict, where images can be sent. We recommend not sending these requests directly using curl. Using the front end is highly recommended as this allows uploading images and automatically converting to the correct format. More on this later. The returned data will be a list of probabilities for each of the 20 possible classes. Again, we recommend using the front end for visualizing the prediction.
 
 ### Question 25
 
@@ -487,7 +488,8 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
---- question 25 fill here ---
+We implemented testing of the API and load testing. The API testing works by sending request to both the frontend and the backend. The frontend test simply sents a get request and ensures that a 200 status code is returned. This ensures that the frontend is running. The backend test is a bit more complicated. Here, we have some example images that are each sent to the backend using POST request. The test then checks that it receives an answer, and that the answer is of the correct format. That is, a list containing probabilities for 20 classes. This ensures that the backend is running and returning data on the correct format.\
+We have also implemented load testing. This was done using locust. We have two different locust files, one for the frontend and one for the backend. The frontend load test simply sends get requests to the frontend, ensuring that multiple users can access it. The backend load test sends random images from the example images to the backend. We performed load tests using 10 users at a time. This worked with no failures and gave a response time of no more than 100 ms in all cases.
 
 ### Question 26
 
