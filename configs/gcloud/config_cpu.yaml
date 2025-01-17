@@ -4,4 +4,4 @@ workerPoolSpecs:
         machineType: n1-highmem-2
     replicaCount: 1
     containerSpec:
-        imageUri: gcr.io/mlops-captcha/training
+        imageUri: europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training
