@@ -35,7 +35,7 @@ def link_model(
 
     artifact = api.artifact(artifact_path)
     artifact.link(
-        target_path=f"{os.getenv('WANDB_ENTITY')}/CaptchaModel/{artifact_name}",
+        target_path=f"{os.getenv('WANDB_ENTITY')}/model-registry/{artifact_name}",
         aliases=aliases,
     )
     artifact.save()
