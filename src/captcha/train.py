@@ -18,10 +18,11 @@ from omegaconf import DictConfig
 from typing import Tuple
 from dotenv import load_dotenv
 
+
 def data_exists(data_path: str | Path) -> bool:
     """
     Check if processed data exists.
-    
+
     Args:
         data_path: Path to the processed data directory (can be string or Path)
     Returns:
@@ -61,7 +62,7 @@ def data_exists(data_path: str | Path) -> bool:
 def pull_data_from_dvc(data_path: str | Path) -> bool:
     """
     Pulls the data using dvc.
-    
+
     Args:
         data_path: Path to the processed data directory (can be string or Path)
     Returns:
@@ -100,7 +101,7 @@ def train(cfg: DictConfig) -> None:
     if not data_exists(data_path):
         data_path = f"{_ROOT}/gcs/mlops_captcha_bucket/data/processed"
 
-    #if not pull_data_from_dvc(data_path):
+    # if not pull_data_from_dvc(data_path):
     #    logger.error("❌ Could not acquire processed data. Aborting training.")
     #    return
 
