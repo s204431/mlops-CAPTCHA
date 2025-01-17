@@ -1,7 +1,6 @@
 [core]
-    remote = gcs_remote
+    remote = storage
     autostage = true
 ['remote "storage"']
     url = gs://mlops_captcha_bucket/
-['remote "gcs_remote"']
-    url = gs://mlops_captcha_bucket/
+    version_aware = true
