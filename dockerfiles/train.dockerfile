@@ -10,15 +10,17 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 COPY src/ src/
-COPY data/processed/ data/processed/
 COPY models/ models/
 COPY reports/ reports/
 COPY configs/ configs/
 
 # Set the working directory and install dependencies
 WORKDIR /
-RUN pip install -r requirements.txt --no-cache-dir
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 RUN pip install . --no-deps --no-cache-dir
 
 # Which file should be executed
 ENTRYPOINT ["python", "-u", "src/captcha/train.py"]
+
+# Run the docker file with the following command assuming you have a .env file with your WANDB API key
+#docker run --env-file .env --name <experiment_name> train:latest

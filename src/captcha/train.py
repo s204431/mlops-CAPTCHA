@@ -19,14 +19,14 @@ from typing import Tuple
 from dotenv import load_dotenv
 
 
-def pull_data_from_dvc(data_path: str | Path) -> bool:
+def data_exists(data_path: str | Path) -> bool:
     """
-    Check if processed data exists, if not pull from DVC.
+    Check if processed data exists.
 
     Args:
         data_path: Path to the processed data directory (can be string or Path)
     Returns:
-        bool: True if data is available or successfully pulled
+        bool: True if data is available
     """
     # Convert to Path object if string
     path = Path(data_path)
@@ -52,9 +52,24 @@ def pull_data_from_dvc(data_path: str | Path) -> bool:
             return True
 
         logger.info("\033[36m📦 Some required files are missing.")
+        return False
 
     else:
         logger.info("\033[36m📦 Processed data directory is empty or doesn't exist.")
+        return False
+
+
+def pull_data_from_dvc(data_path: str | Path) -> bool:
+    """
+    Pulls the data using dvc.
+
+    Args:
+        data_path: Path to the processed data directory (can be string or Path)
+    Returns:
+        bool: True if data is available or successfully pulled
+    """
+    # Convert to Path object if string
+    path = Path(data_path)
 
     # Try to pull from DVC
     logger.info("\033[36m📦 Pulling processed data from DVC...")
