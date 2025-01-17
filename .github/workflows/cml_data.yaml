@@ -36,6 +36,46 @@ jobs:
         run: |
           dvc pull --no-run-cache
 
-      - name: Check data statistics
+      - name: Generate data statistics report
         run: |
-          statistics
+          # Create markdown report with dataset statistics
+          echo "# CAPTCHA Dataset Statistics Report" > data_statistics.md
+          echo "## Dataset Overview" >> data_statistics.md
+          echo "\`\`\`" >> data_statistics.md
+          python - <<EOF >> data_statistics.md
+          from pathlib import Path
+          import torch
+
+          PROCESSED_DATA_PATH = Path("data/processed")
+
+          # Load the data
+          train_images = torch.load(PROCESSED_DATA_PATH / "train_images.pt")
+          train_labels = torch.load(PROCESSED_DATA_PATH / "train_labels.pt")
+          val_images = torch.load(PROCESSED_DATA_PATH / "val_images.pt")
+          val_labels = torch.load(PROCESSED_DATA_PATH / "val_labels.pt")
+          test_images = torch.load(PROCESSED_DATA_PATH / "test_images.pt")
+          test_labels = torch.load(PROCESSED_DATA_PATH / "test_labels.pt")
+          class_names = torch.load(PROCESSED_DATA_PATH / "class_names.pt")
+
+          # Generate statistics
+          print(f"Total number of classes: {len(class_names)}")
+          print(f"Class names: {class_names}")
+          print(f"\nDataset split sizes:")
+          print(f"  Train: {len(train_labels)} images")
+          print(f"  Validation: {len(val_labels)} images")
+          print(f"  Test: {len(test_labels)} images")
+          print(f"\nImage properties:")
+          print(f"  Shape: {train_images[0].shape}")
+          print(f"  Type: {train_images.dtype}")
+          print(f"  Value range: [{train_images.min():.2f}, {train_images.max():.2f}]")
+          EOF
+          echo "\`\`\`" >> data_statistics.md
+
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
+
+      - name: Post statistics as PR comment
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cml comment create data_statistics.md --watermark-title="CAPTCHA Data Statistics"
