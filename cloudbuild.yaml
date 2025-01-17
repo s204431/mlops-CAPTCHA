@@ -21,4 +21,4 @@ steps:
 #  logging: CLOUD_LOGGING_ONLY
 
 ## This is the code need to run the script and create the image to google cloud
-# gcloud builds submit --config=configs/cloudbuild.yaml
+# gcloud builds submit --config=cloudbuild.yaml
