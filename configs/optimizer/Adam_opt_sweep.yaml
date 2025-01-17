@@ -5,7 +5,7 @@ program: src\captcha\train.py      # Path to the script the sweep will run
 method: grid                       # Method to search for the best hyperparameters
 project: Captcha                   # Name of the project
 entity: MLOps-Captcha              # Name of the entity
-metric:    
+metric:
   goal: minimize                   # Goal of the metric
   name: validation_loss            # Name of the metric
 parameters:
