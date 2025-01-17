@@ -29,9 +29,9 @@ def data_exists(data_path: str | Path) -> bool:
     """
     # Convert to Path object if string
     path = Path(data_path)
-    
+
     logger.info("\033[36m📥 Checking for Processed data...")
- 
+
     if path.exists() and any(path.iterdir()):
         # Verify essential files are present
         required_files = [
@@ -41,7 +41,7 @@ def data_exists(data_path: str | Path) -> bool:
             "val_labels.pt",
             "test_images.pt",
             "test_labels.pt",
-            "class_names.pt"
+            "class_names.pt",
         ]
 
         missing_files = [f for f in required_files if not (path / f).exists()]
@@ -49,7 +49,7 @@ def data_exists(data_path: str | Path) -> bool:
         if not missing_files:
             logger.info("\033[36m📦 Found processed data.")
             return True
-        
+
         logger.info("\033[36m📦 Some required files are missing.")
         return False
 
@@ -90,8 +90,7 @@ def pull_data_from_dvc(data_path: str | Path) -> bool:
     except Exception as e:
         logger.error(f"Unexpected error while pulling data: {str(e)}")
         return False
-        
-        
+
 
 def train(cfg: DictConfig) -> None:
     """Trains the model."""
@@ -127,8 +126,8 @@ def train(cfg: DictConfig) -> None:
 
     trainer = pl.Trainer(
         max_epochs=cfg.model.hyperparameters["epochs"],
-        #limit_train_batches=0.1,
-        #limit_val_batches=0.1,
+        limit_train_batches=0.1,
+        limit_val_batches=0.1,
         # callbacks=[early_stopping_callback],
         logger=pl.loggers.WandbLogger(project="Captcha"),
         enable_progress_bar=False,

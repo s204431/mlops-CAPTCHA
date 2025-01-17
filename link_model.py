@@ -1,9 +1,13 @@
 import typer
 import os
 import wandb
+from typing import List
 
 
-def link_model(artifact_path: str, aliases: list[str] = ["staging"]) -> None:
+def link_model(
+    artifact_path: str,
+    aliases: List[str] = typer.Option(["staging"], "--alias", "-a", help="Aliases to link the artifact with."),
+) -> None:
     """
     Stage a specific model to the model registry.
 
@@ -13,8 +17,7 @@ def link_model(artifact_path: str, aliases: list[str] = ["staging"]) -> None:
         aliases: List of aliases to link the artifact with.
 
     Example:
-        model_management link-model entity/project/artifact_name:version -a staging -a best
-
+        python link_model.py MLOps-Captcha/Captcha/CaptchaModel:V0 --alias staging --alias production
     """
     if artifact_path == "":
         typer.echo("No artifact path provided. Exiting.")
@@ -22,16 +25,26 @@ def link_model(artifact_path: str, aliases: list[str] = ["staging"]) -> None:
 
     api = wandb.Api(
         api_key=os.getenv("WANDB_API_KEY"),
-        overrides={"entity": os.getenv("WANDB_ENTITY"), "project": os.getenv("WANDB_PROJECT")},
+        overrides={
+            "entity": os.getenv("WANDB_ENTITY"),
+            "project": os.getenv("WANDB_PROJECT"),
+        },
     )
     _, _, artifact_name_version = artifact_path.split("/")
     artifact_name, _ = artifact_name_version.split(":")
 
     artifact = api.artifact(artifact_path)
-    artifact.link(target_path=f"{os.getenv('WANDB_ENTITY')}/model-registry/{artifact_name}", aliases=aliases)
+    artifact.link(
+        target_path=f"{os.getenv('WANDB_ENTITY')}/model-registry/{artifact_name}",
+        aliases=aliases,
+    )
     artifact.save()
-    typer.echo(f"Artifact {artifact_path} linked to {aliases}")
+    typer.echo(f"Artifact {artifact_path} linked to aliases: {aliases}")
+
+
+def main():
+    typer.run(link_model)
 
 
 if __name__ == "__main__":
-    typer.run(link_model)
+    main()

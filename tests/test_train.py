@@ -6,7 +6,6 @@ import torch
 from captcha.train import train, load_dummy
 from omegaconf import OmegaConf
 from torch.utils.data import Dataset
-import os
 
 # 95% coverage
 
@@ -37,7 +36,6 @@ class DummyModel(nn.Module):
 
 
 def test_train():
-    os.environ["WANDB_MODE"] = "dryrun"
     # Create a temporary directory for testing outputs
     with tempfile.TemporaryDirectory() as temp_dir:
         # Mock _ROOT to point to temporary directory
