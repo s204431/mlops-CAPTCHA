@@ -26,7 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install -e .
+          pip list 
+          make dev_requirements
 
       - name: Auth with GCP
         uses: google-github-actions/auth@v2
@@ -37,35 +38,8 @@ jobs:
         run: |
           dvc pull --no-run-cache
 
-      - name: Check data statistics & generate report
+      - name: Check data statistics
         run: |
-          # Create markdown report header
-          echo "# CAPTCHA Dataset Statistics Report" > data_statistics.md
-          echo "## Dataset Information" >> data_statistics.md
-          echo '```' >> data_statistics.md
-          
-          # Run statistics script and capture output
-          statistics >> data_statistics.md
-          
-          echo '```' >> data_statistics.md
-          
-          # Append visualizations
-          echo "" >> data_statistics.md
-          echo "## Dataset Visualizations" >> data_statistics.md
-          echo "" >> data_statistics.md
-          echo "### Sample CAPTCHA Images" >> data_statistics.md
-          echo "![](./captcha_images.png)" >> data_statistics.md
-          echo "" >> data_statistics.md
-          echo "### Label Distributions" >> data_statistics.md
-          echo "![](./train_label_distribution.png)" >> data_statistics.md
-          echo "![](./val_label_distribution.png)" >> data_statistics.md
-          echo "![](./test_label_distribution.png)" >> data_statistics.md
+          python scr/captcha/dataset.py
 
-      - name: Setup CML
-        uses: iterative/setup-cml@v2
 
-      - name: Comment on PR
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cml comment create data_statistics.md --watermark-title="CAPTCHA Data Statistics"
