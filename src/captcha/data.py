@@ -14,7 +14,6 @@ RAW_DATA_PATH = Path("data/raw")
 PROCESSED_DATA_PATH = Path("data/processed")
 
 
-
 def push_data_to_dvc(raw_data_path: Path) -> bool:
     """Push processed data to DVC remote with correct file handling"""
     logger.info("Starting DVC push process...")
