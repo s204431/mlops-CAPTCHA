@@ -1,0 +1,24 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build container image'
+  args: [
+    'build',
+    '.',
+    '-t',
+    'europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training',
+    '-f',
+    'dockerfiles/train.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push container image'
+  args: [
+    'push',
+    'europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training'
+  ]
+
+## This is commented out to see the logs
+#options:
+#  logging: CLOUD_LOGGING_ONLY
+
+## This is the code need to run the script and create the image to google cloud
+# gcloud builds submit --config=configs/cloudbuild.yaml 

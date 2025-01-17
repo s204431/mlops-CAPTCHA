@@ -1,0 +1,22 @@
+
+# Hyperparameter sweep for the Adam optimizer learning rate
+
+program: src\captcha\train.py      # Path to the script the sweep will run
+method: grid                       # Method to search for the best hyperparameters
+project: Captcha                   # Name of the project
+entity: MLOps-Captcha              # Name of the entity
+metric:    
+  goal: minimize                   # Goal of the metric
+  name: validation_loss            # Name of the metric
+parameters:
+    optimizer.Adam_opt.lr:
+      values: [0.01, 0.1]          # Sweep over disse værdier
+
+command:
+- ${env}                           # Use the environment variables
+- python                           # Use the Python interpreter
+- ${program}                       # Run the program
+- ${args_no_hyphens}               # Use the arguments without hyphens
+
+# wandb sweep configs/optimizer/Adam_opt_sweep.yaml  # Run this command to create the sweep
+# wandb agent MLOps-Captcha/Captcha/<ID>  # Run this command to start the sweep
