@@ -2,13 +2,13 @@ name: Data Statistics Check
 
 on:
   push:
-    branches: 
-      - main 
-    paths: 
+    branches:
+      - main
+    paths:
       - '**/*.dvc'
       - '.dvc/**'
   pull_request:
-    branches: 
+    branches:
       - main
     paths:
       - '**/*.dvc'
@@ -30,40 +30,40 @@ jobs:
           cache: 'pip'
           cache-dependency-path: setup.py
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Auth with GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Pull data
-      run: dvc pull --no-run-cache
+      - name: Pull data
+        run: dvc pull --no-run-cache
 
-- name: Check data statistics & generate report
-      run: |
-        python src/corrupted_mnist/dataset_stat.py > report.md
-        if [ -f "captcha_images.png" ]; then
-          echo '![](./captcha_images.png "CAPTCHA images")' >> report.md
-        fi
-        if [ -f "train_label_distribution.png" ]; then
-          echo '![](./train_label_distribution.png "Train label distribution")' >> report.md
-        fi
-        if [ -f "val_label_distribution.png" ]; then
-          echo '![](./val_label_distribution.png "Validation label distribution")' >> report.md
-        fi
-        if [ -f "test_label_distribution.png" ]; then
-          echo '![](./test_label_distribution.png "Test label distribution")' >> report.md
-        fi
+      - name: Check data statistics & generate report
+        run: |
+          python src/corrupted_mnist/dataset_stat.py > report.md
+          if [ -f "captcha_images.png" ]; then
+            echo '![](./captcha_images.png "CAPTCHA images")' >> report.md
+          fi
+          if [ -f "train_label_distribution.png" ]; then
+            echo '![](./train_label_distribution.png "Train label distribution")' >> report.md
+          fi
+          if [ -f "val_label_distribution.png" ]; then
+            echo '![](./val_label_distribution.png "Validation label distribution")' >> report.md
+          fi
+          if [ -f "test_label_distribution.png" ]; then
+            echo '![](./test_label_distribution.png "Test label distribution")' >> report.md
+          fi
 
-    - name: Setup CML
-      uses: iterative/setup-cml@v2
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
 
-    - name: Comment on PR
-      env:
-        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cml comment create report.md --watermark-title="Data Checker"
+      - name: Comment on PR
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cml comment create report.md --watermark-title="Data Checker"
