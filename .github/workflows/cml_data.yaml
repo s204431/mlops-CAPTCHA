@@ -51,7 +51,7 @@ jobs:
 
       - name: Check data statistics & generate report
         run: |
-          python src/corrupted_mnist/dataset_stat.py > report.md
+          python src\captcha\dataset.py > report.md
           if [ -f "captcha_images.png" ]; then
             echo '![](./captcha_images.png "CAPTCHA images")' >> report.md
           fi
