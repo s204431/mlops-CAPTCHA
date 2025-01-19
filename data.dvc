@@ -2,6 +2,9 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: config.yaml
+    md5: f52e494d2c67a6e7b119200a5fb74113
+    size: 136
   - relpath: data_raw_kaptcha_dataset.zip
     md5: 1f3bb23556a61ec7e4acc951ad0c6330
     size: 192938068

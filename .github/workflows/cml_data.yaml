@@ -44,7 +44,7 @@ jobs:
       - name: Auth with GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GPC_SA_KEY }}
 
       - name: Pull data
         run: dvc pull --no-run-cache
