@@ -2,6 +2,9 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: mkdocs.yml
+    md5: a48a6f06b68d527dc761fc49fe02f27d
+    size: 5887
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
@@ -51,17 +54,3 @@ outs:
       storage:
         etag: 08c4d785b2d5fc8a031001
         version_id: '1737113854897092'
-  - relpath: test.txt
-    md5: 651bcee9497ae6d97abfcb65d961af25
-    size: 9
-    cloud:
-      storage:
-        etag: 08c79d91badb828b031001
-        version_id: '1737321640906439'
-  - relpath: test_file.txt
-    md5: c7b805eb76d64131035eabeb14cf44e8
-    size: 15
-    cloud:
-      storage:
-        etag: 08ecd4fbecdb828b031001
-        version_id: '1737321747507820'
