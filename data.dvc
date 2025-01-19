@@ -51,3 +51,6 @@ outs:
       storage:
         etag: 08c4d785b2d5fc8a031001
         version_id: '1737113854897092'
+  - relpath: test.txt
+    md5: 651bcee9497ae6d97abfcb65d961af25
+    size: 9
