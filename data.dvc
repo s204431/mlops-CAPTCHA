@@ -2,6 +2,9 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: data_raw_kaptcha_dataset.zip
+    md5: 1f3bb23556a61ec7e4acc951ad0c6330
+    size: 192938068
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
@@ -51,3 +54,12 @@ outs:
       storage:
         etag: 08c4d785b2d5fc8a031001
         version_id: '1737113854897092'
+  - relpath: test.txt
+    md5: 651bcee9497ae6d97abfcb65d961af25
+    size: 9
+  - relpath: test_file.txt
+    md5: c7b805eb76d64131035eabeb14cf44e8
+    size: 15
+  - relpath: train.log
+    md5: d41d8cd98f00b204e9800998ecf8427e
+    size: 0
