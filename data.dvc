@@ -2,6 +2,9 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: LICENSE
+    md5: d229da563da18fe5d58cd95a6467d584
+    size: 11558
   - relpath: mkdocs.yml
     md5: a48a6f06b68d527dc761fc49fe02f27d
     size: 5887
