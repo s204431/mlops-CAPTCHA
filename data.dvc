@@ -61,3 +61,7 @@ outs:
   - relpath: test_file.txt
     md5: c7b805eb76d64131035eabeb14cf44e8
     size: 15
+    cloud:
+      storage:
+        etag: 08ecd4fbecdb828b031001
+        version_id: '1737321747507820'
