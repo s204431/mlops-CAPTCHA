@@ -2,27 +2,6 @@ outs:
 - hash: md5
   path: data
   files:
-  - relpath: captcha_mlops.pub
-    md5: a7d7eb7869b65e9bf9a667ecb89ae87c
-    size: 102
-    cloud:
-      storage:
-        etag: 08b2e7dc97ca828b031001
-        version_id: '1737317005341618'
-  - relpath: config.yaml
-    md5: f52e494d2c67a6e7b119200a5fb74113
-    size: 136
-    cloud:
-      storage:
-        etag: 08dcb2a8e1c6828b031001
-        version_id: '1737316085930332'
-  - relpath: data_raw_kaptcha_dataset.zip
-    md5: 1f3bb23556a61ec7e4acc951ad0c6330
-    size: 192938068
-    cloud:
-      storage:
-        etag: 08e782e1b4d3828b031001
-        version_id: '1737319482147175'
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
@@ -72,24 +51,3 @@ outs:
       storage:
         etag: 08c4d785b2d5fc8a031001
         version_id: '1737113854897092'
-  - relpath: test.txt
-    md5: 651bcee9497ae6d97abfcb65d961af25
-    size: 9
-    cloud:
-      storage:
-        etag: 089cf6f597ca828b031001
-        version_id: '1737317005753116'
-  - relpath: test_file.txt
-    md5: c7b805eb76d64131035eabeb14cf44e8
-    size: 15
-    cloud:
-      storage:
-        etag: 08ecfffe97ca828b031001
-        version_id: '1737317005901804'
-  - relpath: train.log
-    md5: d41d8cd98f00b204e9800998ecf8427e
-    size: 0
-    cloud:
-      storage:
-        etag: 08ebf3ee97ca828b031001
-        version_id: '1737317005638123'
