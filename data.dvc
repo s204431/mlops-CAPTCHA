@@ -2,6 +2,9 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: data_raw_kaptcha_dataset.zip
+    md5: 1f3bb23556a61ec7e4acc951ad0c6330
+    size: 192938068
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
