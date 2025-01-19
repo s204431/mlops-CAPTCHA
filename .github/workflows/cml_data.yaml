@@ -1,24 +1,27 @@
 name: Data Statistics Check
 
 on:
+  push:
+    branches: 
+      - main 
+    paths: 
+      - '**/*.dvc'
+      - '.dvc/**'
   pull_request:
-    branches: [ main ]
+    branches: 
+      - main
     paths:
-      - 'data/**/*.dvc'
+      - '**/*.dvc'
       - '.dvc/**'
-      - 'data/'
-  pull_request_target:
-    branches: [ main ]
-    paths:
-      - 'data/**/*.dvc'
-      - '.dvc/**'
-      - 'data/'
+
 jobs:
   dataset_statistics:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,47 +30,40 @@ jobs:
           cache: 'pip'
           cache-dependency-path: setup.py
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip list 
-          make dev_requirements
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
       - name: Auth with GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Pull data
-        run: |
-          dvc pull --no-run-cache
+    - name: Pull data
+      run: dvc pull --no-run-cache
 
-      - name: Check data statistics
-        run: |
-          python scr/captcha/dataset.py
+- name: Check data statistics & generate report
+      run: |
+        python src/corrupted_mnist/dataset_stat.py > report.md
+        if [ -f "captcha_images.png" ]; then
+          echo '![](./captcha_images.png "CAPTCHA images")' >> report.md
+        fi
+        if [ -f "train_label_distribution.png" ]; then
+          echo '![](./train_label_distribution.png "Train label distribution")' >> report.md
+        fi
+        if [ -f "val_label_distribution.png" ]; then
+          echo '![](./val_label_distribution.png "Validation label distribution")' >> report.md
+        fi
+        if [ -f "test_label_distribution.png" ]; then
+          echo '![](./test_label_distribution.png "Test label distribution")' >> report.md
+        fi
 
-      - name: Check data statistics & generate report
-        run: |
-          # Run your dataset_statistics.py (or main.py) 
-          # and capture its console output into a markdown file
-          python src/captcha/dataset.py > report.md
+    - name: Setup CML
+      uses: iterative/setup-cml@v2
 
-          # Append inline images to the markdown file 
-          # (be sure these PNGs match what your script generates)
-          echo '' >> report.md
-          echo '![CAPTCHA images](./captcha_images.png "CAPTCHA images")' >> report.md
-          echo '' >> report.md
-          echo '![Train label distribution](./train_label_distribution.png "Train label distribution")' >> report.md
-          echo '' >> report.md
-          echo '![Val label distribution](./val_label_distribution.png "Val label distribution")' >> report.md
-          echo '' >> report.md
-          echo '![Test label distribution](./test_label_distribution.png "Test label distribution")' >> report.md
-
-      - name: Setup CML
-        uses: iterative/setup-cml@v2
-
-      - name: Comment on PR
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cml comment create data_statistics.md --watermark-title="Data Checker" # (1)!
+    - name: Comment on PR
+      env:
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cml comment create report.md --watermark-title="Data Checker"
