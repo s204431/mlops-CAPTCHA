@@ -5,6 +5,10 @@ outs:
   - relpath: mkdocs.yml
     md5: a48a6f06b68d527dc761fc49fe02f27d
     size: 5887
+    cloud:
+      storage:
+        etag: 08d8d1c8e7de828b031001
+        version_id: '1737322541492440'
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
