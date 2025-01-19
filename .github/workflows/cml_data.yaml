@@ -13,6 +13,14 @@ on:
     paths:
       - '**/*.dvc'
       - '.dvc/**'
+      - 'data/'
+  pull_request_target:
+    branches: [ main ]
+    paths:
+      - 'data/**/*.dvc'
+      - '.dvc/**'
+      - 'data/'
+
 
 jobs:
   dataset_statistics:
@@ -20,8 +28,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5

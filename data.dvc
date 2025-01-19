@@ -5,6 +5,10 @@ outs:
   - relpath: data_raw_kaptcha_dataset.zip
     md5: 1f3bb23556a61ec7e4acc951ad0c6330
     size: 192938068
+    cloud:
+      storage:
+        etag: 08d3e4b1eabd828b031001
+        version_id: '1737313689039443'
   - relpath: processed/class_names.pt
     md5: abf03085faa8c20f601b26c5e3068a36
     size: 1008
@@ -57,9 +61,21 @@ outs:
   - relpath: test.txt
     md5: 651bcee9497ae6d97abfcb65d961af25
     size: 9
+    cloud:
+      storage:
+        etag: 08a4e79cd0b8828b031001
+        version_id: '1737312291992484'
   - relpath: test_file.txt
     md5: c7b805eb76d64131035eabeb14cf44e8
     size: 15
+    cloud:
+      storage:
+        etag: 08a081dfcfb8828b031001
+        version_id: '1737312290980000'
   - relpath: train.log
     md5: d41d8cd98f00b204e9800998ecf8427e
     size: 0
+    cloud:
+      storage:
+        etag: 08bcf291d0b8828b031001
+        version_id: '1737312291813692'
