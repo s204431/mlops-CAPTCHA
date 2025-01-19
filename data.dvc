@@ -5,6 +5,10 @@ outs:
   - relpath: LICENSE
     md5: d229da563da18fe5d58cd95a6467d584
     size: 11558
+    cloud:
+      storage:
+        etag: 0883a6d18de1828b031001
+        version_id: '1737323158196995'
   - relpath: mkdocs.yml
     md5: a48a6f06b68d527dc761fc49fe02f27d
     size: 5887
