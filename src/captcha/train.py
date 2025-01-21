@@ -108,8 +108,8 @@ def train(cfg: DictConfig) -> None:
     #    return
 
     train_set = CaptchaDataset(data_path, "train", state)
-    validation_set = CaptchaDataset(data_path, "validation")
-    test_set = CaptchaDataset(data_path, "test")
+    validation_set = CaptchaDataset(data_path, "validation", state)
+    test_set = CaptchaDataset(data_path, "test", state)
     # train_set, validation_set, test_set = load_dummy()
     train_dataloader = torch.utils.data.DataLoader(
         train_set,
