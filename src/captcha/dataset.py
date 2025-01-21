@@ -97,7 +97,7 @@ class CaptchaDataset(Dataset):
             client = storage.Client()
             bucket = client.get_bucket("mlops_captcha_bucket")
             base_path = "data/processed"  # Base path in GCS bucket
-            
+
             if self.data_type == "train":
                 image_blob = bucket.blob(f"{base_path}/train_images.pt")
                 target_blob = bucket.blob(f"{base_path}/train_labels.pt")
@@ -107,10 +107,10 @@ class CaptchaDataset(Dataset):
             else:
                 image_blob = bucket.blob(f"{base_path}/test_images.pt")
                 target_blob = bucket.blob(f"{base_path}/test_labels.pt")
-            
+
             self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
             self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
-        
+
         return self.images, self.target
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
