@@ -93,22 +93,25 @@ class CaptchaDataset(Dataset):
             else:
                 self.images = torch.load(f"{self.data_path}/test_images.pt")
                 self.target = torch.load(f"{self.data_path}/test_labels.pt")
-            return self.images, self.target
         elif self.state == "remote":
             client = storage.Client()
             bucket = client.get_bucket("mlops_captcha_bucket")
+            base_path = "data/processed"  # Base path in GCS bucket
+            
             if self.data_type == "train":
-                image_blob = bucket.blob(f"{self.data_path}/train_images.pt")
-                target_blob = bucket.blob(f"{self.data_path}/train_labels.pt")
+                image_blob = bucket.blob(f"{base_path}/train_images.pt")
+                target_blob = bucket.blob(f"{base_path}/train_labels.pt")
             elif self.data_type == "validation" or self.data_type == "val":
-                image_blob = torch.load(f"{self.data_path}/val_images.pt")
-                target_blob = torch.load(f"{self.data_path}/val_labels.pt")
+                image_blob = bucket.blob(f"{base_path}/val_images.pt")
+                target_blob = bucket.blob(f"{base_path}/val_labels.pt")
             else:
-                image_blob = bucket.blob(f"{self.data_path}/test_images.pt")
-                target_blob = bucket.blob(f"{self.data_path}/test_labels.pt")
+                image_blob = bucket.blob(f"{base_path}/test_images.pt")
+                target_blob = bucket.blob(f"{base_path}/test_labels.pt")
+            
             self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
             self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
-            return self.images, self.target
+        
+        return self.images, self.target
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         """Return image and target tensor."""
