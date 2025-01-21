@@ -31,7 +31,7 @@ def test_captcha_dataset():
         torch.save(class_names, temp_path / "class_names.pt")
 
         # Test CaptchaDataset class
-        dataset = CaptchaDataset(temp_path, "train")
+        dataset = CaptchaDataset(temp_path, "train", "local")
         assert len(dataset) == 100
         assert dataset[0][0].shape == (1, 28, 28)
         assert dataset[0][1].item() in range(10)
