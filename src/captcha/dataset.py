@@ -94,7 +94,7 @@ class CaptchaDataset(Dataset):
                 self.images = torch.load(f"{self.data_path}/test_images.pt")
                 self.target = torch.load(f"{self.data_path}/test_labels.pt")
             return self.images, self.target
-        elif self.state == 'remote':
+        elif self.state == "remote":
             client = storage.Client()
             bucket = client.get_bucket("mlops_captcha_bucket")
             if self.data_type == "train":
