@@ -98,14 +98,16 @@ def train(cfg: DictConfig) -> None:
     logger.info("\033[36m🚀 Starting training...")
     run = wandb.init(project="Captcha")
     data_path = f"{_ROOT}/data/processed/"
+    state = "local"
     if not data_exists(data_path):
         data_path = f"{_ROOT}/gcs/mlops_captcha_bucket/data/processed"
+        state = "remote"
 
     # if not pull_data_from_dvc(data_path):
     #    logger.error("❌ Could not acquire processed data. Aborting training.")
     #    return
 
-    train_set = CaptchaDataset(data_path, "train")
+    train_set = CaptchaDataset(data_path, "train", state)
     validation_set = CaptchaDataset(data_path, "validation")
     test_set = CaptchaDataset(data_path, "test")
     # train_set, validation_set, test_set = load_dummy()
