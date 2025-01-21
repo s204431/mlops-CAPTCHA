@@ -1,8 +1,11 @@
 import torch
+import matplotlib.pyplot as plt
+import io
+import numpy as np
+
+from google.cloud import storage
 from torch.utils.data import Dataset
 from pathlib import Path
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = True) -> None:
@@ -69,26 +72,45 @@ def dataset_statistics(datadir: str = "data/processed") -> None:
 class CaptchaDataset(Dataset):
     """Custom dataset for the CAPTCHA data."""
 
-    def __init__(self, processed_data_path: Path, data_type: str) -> None:
+    def __init__(self, processed_data_path: Path, data_type: str, state: str) -> None:
         """
         Initialize the dataset with the given path to processed data.
         """
         self.data_path = processed_data_path
         self.data_type = data_type
+        self.state = state
         self.load_data()
 
     def load_data(self) -> None:
         """Return train, validation and test datasets for CAPTCHA data set."""
+        if self.state == "local":
+            if self.data_type == "train":
+                self.images = torch.load(f"{self.data_path}/train_images.pt")
+                self.target = torch.load(f"{self.data_path}/train_labels.pt")
+            elif self.data_type == "validation" or self.data_type == "val":
+                self.images = torch.load(f"{self.data_path}/val_images.pt")
+                self.target = torch.load(f"{self.data_path}/val_labels.pt")
+            else:
+                self.images = torch.load(f"{self.data_path}/test_images.pt")
+                self.target = torch.load(f"{self.data_path}/test_labels.pt")
+        elif self.state == "remote":
+            client = storage.Client()
+            bucket = client.get_bucket("mlops_captcha_bucket")
+            base_path = "data/processed"  # Base path in GCS bucket
 
-        if self.data_type == "train":
-            self.images = torch.load(f"{self.data_path}/train_images.pt")
-            self.target = torch.load(f"{self.data_path}/train_labels.pt")
-        elif self.data_type == "validation" or self.data_type == "val":
-            self.images = torch.load(f"{self.data_path}/val_images.pt")
-            self.target = torch.load(f"{self.data_path}/val_labels.pt")
-        else:
-            self.images = torch.load(f"{self.data_path}/test_images.pt")
-            self.target = torch.load(f"{self.data_path}/test_labels.pt")
+            if self.data_type == "train":
+                image_blob = bucket.blob(f"{base_path}/train_images.pt")
+                target_blob = bucket.blob(f"{base_path}/train_labels.pt")
+            elif self.data_type == "validation" or self.data_type == "val":
+                image_blob = bucket.blob(f"{base_path}/val_images.pt")
+                target_blob = bucket.blob(f"{base_path}/val_labels.pt")
+            else:
+                image_blob = bucket.blob(f"{base_path}/test_images.pt")
+                target_blob = bucket.blob(f"{base_path}/test_labels.pt")
+
+            self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
+            self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
+
         return self.images, self.target
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
