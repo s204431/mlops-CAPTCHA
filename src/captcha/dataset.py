@@ -8,8 +8,6 @@ from torch.utils.data import Dataset
 from pathlib import Path
 
 
-
-
 def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = True) -> None:
     """Show images and target labels."""
     fig, axes = plt.subplots(5, 5, figsize=(10, 10))
@@ -85,7 +83,7 @@ class CaptchaDataset(Dataset):
 
     def load_data(self) -> None:
         """Return train, validation and test datasets for CAPTCHA data set."""
-        if self.state == 'local':
+        if self.state == "local":
             if self.data_type == "train":
                 self.images = torch.load(f"{self.data_path}/train_images.pt")
                 self.target = torch.load(f"{self.data_path}/train_labels.pt")
@@ -96,8 +94,8 @@ class CaptchaDataset(Dataset):
                 self.images = torch.load(f"{self.data_path}/test_images.pt")
                 self.target = torch.load(f"{self.data_path}/test_labels.pt")
             return self.images, self.target
-        elif self.state == 'remote':
-            bucket_name = self.data_path.split("/")[2]  
+        elif self.state == "remote":
+            bucket_name = self.data_path.split("/")[2]
             client = storage.Client()
             bucket = client.get_bucket(bucket_name)
             if self.data_type == "train":
@@ -116,10 +114,6 @@ class CaptchaDataset(Dataset):
                 target_blob = bucket.blob(f"{self.data_path}/test_labels.pt")
                 self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
             return self.images, self.target
-
-
-
-
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         """Return image and target tensor."""
