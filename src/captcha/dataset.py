@@ -97,24 +97,19 @@ class CaptchaDataset(Dataset):
                 self.target = torch.load(f"{self.data_path}/test_labels.pt")
             return self.images, self.target
         elif self.state == 'remote':
-            bucket_name = self.data_path.split("/")[2]  
             client = storage.Client()
-            bucket = client.get_bucket(bucket_name)
+            bucket = client.get_bucket("mlops_captcha_bucket")
             if self.data_type == "train":
                 image_blob = bucket.blob(f"{self.data_path}/train_images.pt")
-                self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
                 target_blob = bucket.blob(f"{self.data_path}/train_labels.pt")
-                self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
             elif self.data_type == "validation" or self.data_type == "val":
                 image_blob = torch.load(f"{self.data_path}/val_images.pt")
-                self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
                 target_blob = torch.load(f"{self.data_path}/val_labels.pt")
-                self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
             else:
                 image_blob = bucket.blob(f"{self.data_path}/test_images.pt")
-                self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
                 target_blob = bucket.blob(f"{self.data_path}/test_labels.pt")
-                self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
+            self.images = torch.load(io.BytesIO(image_blob.download_as_bytes()))
+            self.target = torch.load(io.BytesIO(target_blob.download_as_bytes()))
             return self.images, self.target
 
 
