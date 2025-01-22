@@ -421,7 +421,7 @@ We have used the GCP Compute Engine API to create virtual machines and among oth
 >
 > Answer:
 
-[this figure](figures/captcha-bucket.png)
+![this figure](figures/captcha-bucket.png)
 
 ### Question 20
 
@@ -430,7 +430,7 @@ We have used the GCP Compute Engine API to create virtual machines and among oth
 >
 > Answer:
 
-![CHANGED FIGURE](figures/captcha-artifact-registry.png)
+![this figure](figures/captcha-artifact-registry.png)
 
 ### Question 21
 
@@ -439,7 +439,7 @@ We have used the GCP Compute Engine API to create virtual machines and among oth
 >
 > Answer:
 
-[this figure](captcha-cloud-build/build.png)
+![this figure](captcha-cloud-build/build.png)
 
 ### Question 22
 
