@@ -554,7 +554,8 @@ Yes, we implemented monitoring of the deployed model in the cloud. In particular
 >
 > Answer:
 
---- question 28 fill here ---
+In addition to what was previously mentioned, we also implemented a frontend and data drifting. The frontend uses streamlit. It allows the user to upload any image and it will then convert this image to the correct format and send a request to the backend API. After receiving a prediction, it presents this visually to the user by showing the prediction and probabilities. The frontend can be accessed here: https://frontend-1048604560911.europe-west1.run.app \
+The data drifting API was added as a new service at https://monitoring-1048604560911.europe-west1.run.app/report. This was done using evidently. It gathers the training data and logs from inference in our bucket in the cloud.
 
 ### Question 29
 
