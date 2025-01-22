@@ -166,10 +166,10 @@ The reason for using a pre-trained model was mainly to utilize the pre-trained w
 
 In order to manage dependencies in our project we used requirement files. We have four different requirement files: requirements.txt, requirements_dev.txt, requirements_backend.txt and requirements_frontend.txt. The requirements.txt files is the most important since it contains the essential requirements for running the code. The requirements_dev.txt file contains additional dependencies that are not necessary for running the code, but may be useful for a developer of the project. The remaining two are dependencies for the backend and frontend respectively and are simply subsets of the requirements.txt file such that the docker images do not contain unnecessary dependencies.
 A new member of the team would need to execute the following commands to get a copy of the environment:\
-git clone https://github.com/s204431/mlops-CAPTCHA\
+git clone https://github.com/s204431/mlops-CAPTCHA \
 pip install -e .\
 dvc pull\
-pre-commit install\
+pre-commit install
 
 Note that this assumes that the team member has already installed python version 3.11 or greater and pip.
 
@@ -351,12 +351,12 @@ We made use of config files. All config files related to experiments can be foun
 >
 > Answer:
 
-    For our project we developed several images: one for training, one for evaluating the model, one for the deployment backend and frontend.
-    And example of how to run one of our docker files can be seen below:
-    The following is a link to the evaluate docker file: <https://github.com/s204431/mlops-CAPTCHA/blob/main/dockerfiles/evaluate.dockerfile>
-    You can build this dockerfile by running the following command from the root of the project: `docker build -f dockerfiles/evaluate.dockerfile . -t eval:latest?
-    You can run the docker image created by the previous command by running the following command: `docker run --name eval1 eval:latest`
-    To run this dockerfiles successfully you need to have a trained model in the models folder: models/model.pth.
+For our project we developed several images: one for training, one for evaluating the model, one for the deployment backend and frontend.
+And example of how to run one of our docker files can be seen below:
+The following is a link to the evaluate docker file: <https://github.com/s204431/mlops-CAPTCHA/blob/main/dockerfiles/evaluate.dockerfile>
+You can build this dockerfile by running the following command from the root of the project: `docker build -f dockerfiles/evaluate.dockerfile . -t eval:latest?
+You can run the docker image created by the previous command by running the following command: `docker run --name eval1 eval:latest`
+To run this dockerfiles successfully you need to have a trained model in the models folder: models/model.pth.
 
 ### Question 16
 
