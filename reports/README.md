@@ -284,7 +284,8 @@ Yes we made use of DVC for version control of our data. We have stored both the 
 >
 > Answer:
 
---- question 11 fill here ---
+We have implemented all of the the project checkmarks related to continuous integration. Unit tests related to data, dataset, model construction and/or model training can be found in the tests/unittests folder. Tests for the raw data images can be found in the tests/test_images folder. The tests folder also contains locust performance tests and integration tests for the api, but more on those later. All os the mentioned tests can be run using the ´pytest tests/´ command. The coverage of the tests can be found using the ´coverage run -m pytest tests/´ and ´coverage report´ commands.
+Continuous workflow files can be found in the .github/workflows folder. This folder contains workflow files for tests, pre-commit hooks, code checking, model staging and data changes. Additionally, docker images are automatically built using workflows. All triggered workflows can be seen using the following link: <https://github.com/s204431/mlops-CAPTCHA/actions>.
 
 ## Running code and tracking experiments
 
