@@ -1,4 +1,4 @@
-# config_gpu.yaml
+# config_cpu.yaml
 workerPoolSpecs:
     machineSpec:
         machineType: n1-highmem-2
