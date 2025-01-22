@@ -105,17 +105,6 @@ class Resnet18(pl.LightningModule):
 
     @classmethod
     def load_from_checkpoint(cls, checkpoint_path: str, optimimzer_cfg: DictConfig, num_classes: int = 20):
-        """
-        Class method to load a Resnet18 model from a checkpoint file.
-
-        Args:
-            checkpoint_path (str): Path to the checkpoint file.
-            optimimzer_cfg (DictConfig): Optimizer configuration.
-            num_classes (int): Number of output classes. Default is 20.
-
-        Returns:
-            Resnet18: The loaded model instance.
-        """
         if not os.path.exists(checkpoint_path):
             raise FileNotFoundError(f"Checkpoint file not found: {checkpoint_path}")
 
@@ -124,10 +113,10 @@ class Resnet18(pl.LightningModule):
 
         # Load the checkpoint
         checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
-        print(checkpoint.keys())
-        model.load_state_dict(checkpoint)
 
-        # Set the model to evaluation mode
+        # Directly load the weights
+        model.load_state_dict(checkpoint, strict=False)
+
         model.eval()
         return model
 

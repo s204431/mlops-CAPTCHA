@@ -1,4 +1,4 @@
-from src.captcha.model import Resnet18
+from captcha.model import Resnet18
 import torch
 
 # 63% coverage
