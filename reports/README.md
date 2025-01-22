@@ -129,7 +129,7 @@ Group 68
 >
 > Answer:
 
-s204431, s195901 ..., ..., ...
+s204431, s195901, s243867, ..., ...
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -284,7 +284,7 @@ Yes we made use of DVC for version control of our data. We have stored both the 
 >
 > Answer:
 
---- question 11 fill here ---
+For our continuous integration, we have used 5 different files: pre-committing, code formatting, unit testing, checking data statistics and checking the staged model. The workflow responsible for the pre-committing simply pre-commits the changes that are ready to commit. The code formatting workflow makes use of "ruff" to check and also format the code whenever its pushed or pulled from the main branch. For the unit test workflow we have implemented tests for the data.py, dataset.py, model.py and train.py as well as an integration test for the api. It also returns the coverage of the tests so we get an indicator on how many lines of code were actually executed when tested. The workflow for checking data statistics runs whenever changes are made to data-related files (.dvc and data/ directories) in the repository. It first pulls the latest dataset using DVC, then executes a Python script to generate a data report. This report includes key statistics such as label distributions and dataset visualizations, which are attached to the pull request for review. And finally the workflow for checking the staged model gets executed when a model in the model registry is added an alias "staging". Then the model gets tested and if it succeeds it will get the alias "production", indicating that the model is ready for deployment. All workflows are run on the latest version of python and on the latest version of ubuntu. An example of a triggered workflow can be seen here: [Unit Tests](https://github.com/s204431/mlops-CAPTCHA/blob/36a02b1035ed8437085693b0a07463988ec51434/.github/workflows/tests.yaml)
 
 ## Running code and tracking experiments
 
