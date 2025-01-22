@@ -16,7 +16,7 @@ def evaluate(cfg: DictConfig) -> None:
     """Evaluates the model on the test set."""
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
         data_path = f"{_ROOT}/data/processed/"
-        test_set = CaptchaDataset(data_path, "test")
+        test_set = CaptchaDataset(data_path, "test", "local")
         # _, _, test_set = load_dummy()
         test_dataloader = torch.utils.data.DataLoader(test_set, batch_size=cfg.model.hyperparameters["batch_size"])
         model = Resnet18(cfg.optimizer.Adam_opt)  # this is our LightningModule
