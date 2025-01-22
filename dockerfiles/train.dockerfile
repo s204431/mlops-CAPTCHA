@@ -5,7 +5,7 @@ FROM python:3.11-slim AS base
 # Add build arg for WANDB
 ARG WANDB_API_KEY
 ENV WANDB_API_KEY=$WANDB_API_KEY
-ENV WANDB_SILENT=true 
+ENV WANDB_SILENT=true
 
 # Install Python
 RUN apt update && \

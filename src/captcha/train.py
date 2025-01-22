@@ -5,7 +5,8 @@ import os
 import subprocess
 import wandb
 import warnings
-warnings.filterwarnings('ignore', category=FutureWarning)
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
@@ -145,7 +146,6 @@ def train(cfg: DictConfig) -> None:
     torch.save(model.state_dict(), model_path)
     logger.info(f"\033[36m💾 Model saved to{model_path}")
 
-
     # Log model as an artifact
     final_test_acc = trainer.callback_metrics.get("test_acc", None)
     final_test_loss = trainer.callback_metrics.get("test_loss", None)
@@ -174,7 +174,10 @@ def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeDat
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
     return train_dataset, val_dataset, test_dataset
 
-print(f"Config path: /configs")
+
+print("Config path: /configs")
+
+
 @hydra.main(config_path="/configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Simply runs the training."""
