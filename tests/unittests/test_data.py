@@ -1,4 +1,4 @@
-from src.captcha.data import preprocess_raw, normalize
+from captcha.data import preprocess_raw, normalize
 import torch
 import tempfile
 from pathlib import Path
