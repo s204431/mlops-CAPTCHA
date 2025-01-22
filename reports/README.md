@@ -430,7 +430,7 @@ We have used the GCP Compute Engine API to create virtual machines and among oth
 >
 > Answer:
 
-[this figure](figures/captcha-artifact-registry.png)
+![CHANGED FIGURE](figures/captcha-artifact-registry.png)
 
 ### Question 21
 
