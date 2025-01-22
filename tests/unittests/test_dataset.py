@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 import torch
-from src.captcha.dataset import CaptchaDataset, show_image_and_target
+from captcha.dataset import CaptchaDataset, show_image_and_target
 import numpy as np
 
 # 37% coverage
