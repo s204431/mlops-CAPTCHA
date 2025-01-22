@@ -284,7 +284,7 @@ Yes we made use of DVC for version control of our data. We have stored both the 
 >
 > Answer:
 
-We have implemented all of the the project checkmarks related to continuous integration. Unit tests related to data, dataset, model construction and/or model training can be found in the tests/unittests folder. Tests for the raw data images can be found in the tests/test_images folder. The tests folder also contains locust performance tests and integration tests for the api, but more on those later. All os the mentioned tests can be run using the ´pytest tests/´ command. The coverage of the tests can be found using the ´coverage run -m pytest tests/´ and ´coverage report´ commands.
+We have implemented all of the the project checkmarks related to continuous integration. Unit tests related to data, dataset, model construction and/or model training can be found in the tests/unittests folder. Tests for the raw data images can be found in the tests/test_images folder. The tests folder also contains locust performance tests and integration tests for the api, but more on those later. All os the mentioned tests can be run using the `pytest tests/` command. The coverage of the tests can be found using the `coverage run -m pytest tests/` and `coverage report` commands.
 Continuous workflow files can be found in the .github/workflows folder. This folder contains workflow files for tests, pre-commit hooks, code checking, model staging and data changes. Additionally, docker images are automatically built using workflows. All triggered workflows can be seen using the following link: <https://github.com/s204431/mlops-CAPTCHA/actions>.
 
 ## Running code and tracking experiments
@@ -351,7 +351,12 @@ We made use of config files. All config files related to experiments can be foun
 >
 > Answer:
 
---- question 15 fill here ---
+    For our project we developed several images: one for training, one for evaluating the model, one for the deployment backend and frontend.
+    And example of how to run one of our docker files can be seen below:
+    The following is a link to the evaluate docker file: <https://github.com/s204431/mlops-CAPTCHA/blob/main/dockerfiles/evaluate.dockerfile>
+    You can build this dockerfile by running the following command from the root of the project: `docker build -f dockerfiles/evaluate.dockerfile . -t eval:latest`
+    You can run the docker image created by the previous command by running the following command: `docker run --name eval1 eval:latest`
+    To run this dockerfiles successfully you need to have a trained model in the models folder: models/model.pth.
 
 ### Question 16
 
@@ -406,7 +411,8 @@ Not sure if we used any more services worth mentioning...
 >
 > Answer:
 
---- question 18 fill here ---
+We have used the GCP Compute Engine API to create virtual machines and among other things train our model using those virtual machines. For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
+
 
 ### Question 19
 
@@ -513,7 +519,7 @@ We have also implemented load testing. This was done using locust. We have two d
 >
 > Answer:
 
---- question 26 fill here ---
+Yes, we implemented monitoring of the deployed model in the cloud. In particular, we implemented monitoring for the backend service. We also deployed a drift detection API as a new service called "monitoring". The backend service has a /metrics endpoint which outputs different metrics, such as number of request, latency of requests, number of errors, etc. This allows us to keep track of the different metrics and make sure that they are as expected. We have used a sidecar container to read these metrics and display them in the monitor tab for Cloud Run. In addition to this, we have set up an alerting system. We have configured it to give an alert with a warning when the number of requests per minute is high.
 
 ## Overall discussion of project
 
