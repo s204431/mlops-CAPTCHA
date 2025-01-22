@@ -7,8 +7,13 @@ steps:
     '-t',
     'europe-west1-docker.pkg.dev/mlops-captcha/mlops-docker/training',
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/train.dockerfile',
+    '--build-arg',
+    'WANDB_API_KEY=$$WANDB_API_KEY'
   ]
+
+  secretEnv: ['WANDB_API_KEY']
+
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
@@ -17,3 +22,11 @@ steps:
   ]
 options:
   logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/1048604560911/secrets/WANDB_API_KEY/versions/latest
+    env: 'WANDB_API_KEY'
+
+## This is the code need to run the script and create the image to google cloud
+# gcloud builds submit --config=cloudbuild.yaml
