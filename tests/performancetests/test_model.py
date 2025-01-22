@@ -4,6 +4,9 @@ import time
 from captcha.model import Resnet18
 import torch
 from omegaconf import OmegaConf
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def load_model(artifact, cfg):
