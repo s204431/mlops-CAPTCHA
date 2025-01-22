@@ -439,7 +439,7 @@ We have used the GCP Compute Engine API to create virtual machines and among oth
 >
 > Answer:
 
-![this figure](captcha-cloud-build/build.png)
+![this figure](figures/captcha-cloud-build.png)
 
 ### Question 22
 
