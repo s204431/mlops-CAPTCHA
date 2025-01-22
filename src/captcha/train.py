@@ -21,6 +21,27 @@ from omegaconf import DictConfig
 from typing import Tuple
 from dotenv import load_dotenv
 
+def get_config_path() -> str:
+    """Get the configuration path for both local and Vertex AI environments."""
+    if os.getenv('AIP_MODEL_DIR') is not None:
+        logger.info("Running in Vertex AI environment")
+        return "/configs"
+    else:
+        logger.info("Running in local environment")
+        return f"{_ROOT}/configs"
+
+
+def get_model_save_path() -> str:
+    """Get the appropriate model save path based on the environment."""
+    if os.getenv('AIP_MODEL_DIR') is not None:
+        path = os.getenv('AIP_MODEL_DIR', '/models')
+    else:
+        path = "/models"
+    
+    # Ensure directory exists
+    os.makedirs(path, exist_ok=True)
+    return os.path.join(path, "model.pth")
+
 
 def data_exists(data_path: str | Path) -> bool:
     """
@@ -142,7 +163,7 @@ def train(cfg: DictConfig) -> None:
     logger.info("\033[36m🏁 Training completed. Starting testing...")
     trainer.test(model, test_dataloader)
     logger.info("\033✅ Testing completed")
-    model_path = "/models/model.pth"
+    model_path = get_model_save_path()
     torch.save(model.state_dict(), model_path)
     logger.info(f"\033[36m💾 Model saved to{model_path}")
 
@@ -178,7 +199,7 @@ def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeDat
 print("Config path: /configs")
 
 
-@hydra.main(config_path="/configs", config_name="default_config", version_base="1.1")
+@hydra.main(config_path=get_config_path(), config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Simply runs the training."""
     load_dotenv()
