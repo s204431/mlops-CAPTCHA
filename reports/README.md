@@ -95,7 +95,7 @@ will check the repositories and the code to verify your answers.
 
 * [x] Check how robust your model is towards data drifting (M27)
 * [x] Deploy to the cloud a drift detection API (M27)
-* [ ] Instrument your API with a couple of system metrics (M28)
+* [x] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
@@ -129,7 +129,7 @@ Group 68
 >
 > Answer:
 
-s204431, ..., ..., ..., ...
+s204431, s195901 ..., ..., ...
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -237,7 +237,7 @@ We implemented tests for most of the code. In total we have 14 tests for the mod
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage of our code is ???. As code coverage only explains the percentage of the code that has been executed during the tests, we cannot trust the code to be completely error free. The reason for this being the case, is that code coverage cannot ensure that the entire functionality of the program is covered. Even though all of the code is covered by the tests, there might be some program flow that hasn't been covered or even some edge cases that should have been tested. Additionally, the output of some of the methods could be wrong even though 100% of the code is covered.
 
 ### Question 9
 
