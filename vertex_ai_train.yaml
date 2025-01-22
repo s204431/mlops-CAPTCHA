@@ -29,7 +29,7 @@ steps:
     '--region',
     'europe-west1',
     '--display-name',
-    'example-mlops-job',
+    'mlops-captcha',
     '--config',
     '${_VERTEX_TRAIN_CONFIG}',
   ]
