@@ -237,7 +237,7 @@ We implemented tests for most of the code. In total we have 14 tests for the mod
 >
 > Answer:
 
-The total code coverage of our code is ???. As code coverage only explains the percentage of the code that has been executed during the tests, we cannot trust the code to be completely error free. The reason for this being the case, is that code coverage cannot ensure that the entire functionality of the program is covered. Even though all of the code is covered by the tests, there might be some program flow that hasn't been covered or even some edge cases that should have been tested. Additionally, the output of some of the methods could be wrong even though 100% of the code is covered. 
+The total code coverage of our code is ???. As code coverage only explains the percentage of the code that has been executed during the tests, we cannot trust the code to be completely error free. The reason for this being the case, is that code coverage cannot ensure that the entire functionality of the program is covered. Even though all of the code is covered by the tests, there might be some program flow that hasn't been covered or even some edge cases that should have been tested. Additionally, the output of some of the methods could be wrong even though 100% of the code is covered.
 
 ### Question 9
 
