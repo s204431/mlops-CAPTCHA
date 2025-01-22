@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def load_model(artifact, cfg):
     logdir = "models"
     model_checkpoint = os.environ.get("WANDB_ENTITY") + "/" + os.environ.get("WANDB_PROJECT") + "/captcha_model:latest"
