@@ -4,6 +4,8 @@ from pathlib import Path
 import os
 import subprocess
 import wandb
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
 
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
@@ -138,9 +140,11 @@ def train(cfg: DictConfig) -> None:
     trainer.fit(model, train_dataloader, validation_dataloader)
     logger.info("\033[36m🏁 Training completed. Starting testing...")
     trainer.test(model, test_dataloader)
-    logger.info("\033✅ Testing completed.")
-    torch.save(model.state_dict(), f"{_ROOT}/models/model.pth")
-    logger.info(f"\033[36m💾 Model saved to {_ROOT}/models/model.pth")
+    logger.info("\033✅ Testing completed")
+    model_path = "/models/model.pth"
+    torch.save(model.state_dict(), model_path)
+    logger.info(f"\033[36m💾 Model saved to{model_path}")
+
 
     # Log model as an artifact
     final_test_acc = trainer.callback_metrics.get("test_acc", None)
@@ -152,7 +156,8 @@ def train(cfg: DictConfig) -> None:
         description="A model trained to predict captcha images",
         metadata={"test accuracy": final_test_acc, "test loss": final_test_loss},
     )
-    artifact.add_file(f"{_ROOT}/models/model.pth")
+
+    artifact.add_file(model_path)
     run.log_artifact(artifact)
 
 
@@ -169,8 +174,8 @@ def load_dummy() -> Tuple[datasets.FakeData, datasets.FakeData, datasets.FakeDat
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
     return train_dataset, val_dataset, test_dataset
 
-
-@hydra.main(config_path=f"{_ROOT}/configs", config_name="default_config", version_base="1.1")
+print(f"Config path: /configs")
+@hydra.main(config_path="/configs", config_name="default_config", version_base="1.1")
 def main(cfg: DictConfig) -> None:
     """Main function. Simply runs the training."""
     load_dotenv()
