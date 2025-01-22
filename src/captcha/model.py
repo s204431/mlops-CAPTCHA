@@ -9,6 +9,7 @@ import hydra
 from loguru import logger
 from omegaconf import DictConfig
 from typing import Tuple
+import os
 
 
 class Resnet18(pl.LightningModule):
@@ -101,6 +102,34 @@ class Resnet18(pl.LightningModule):
             logger.info(
                 f"\033[36m🧪 Test Results\033[0m - \033[33mLoss: {test_loss:.4f}\033[0m | \033[32mAccuracy: {test_acc:.4f}\033[0m"
             )
+
+    @classmethod
+    def load_from_checkpoint(cls, checkpoint_path: str, optimimzer_cfg: DictConfig, num_classes: int = 20):
+        """
+        Class method to load a Resnet18 model from a checkpoint file.
+
+        Args:
+            checkpoint_path (str): Path to the checkpoint file.
+            optimimzer_cfg (DictConfig): Optimizer configuration.
+            num_classes (int): Number of output classes. Default is 20.
+
+        Returns:
+            Resnet18: The loaded model instance.
+        """
+        if not os.path.exists(checkpoint_path):
+            raise FileNotFoundError(f"Checkpoint file not found: {checkpoint_path}")
+
+        # Initialize the model
+        model = cls(optimimzer_cfg=optimimzer_cfg, num_classes=num_classes)
+
+        # Load the checkpoint
+        checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
+        print(checkpoint.keys())
+        model.load_state_dict(checkpoint)
+
+        # Set the model to evaluation mode
+        model.eval()
+        return model
 
 
 @hydra.main(config_path="../../configs", config_name="default_config", version_base="1.1")
