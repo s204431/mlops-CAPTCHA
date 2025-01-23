@@ -578,7 +578,7 @@ The data drifting API was added as a new service at https://monitoring-104860456
 >
 > Answer:
 
---- question 29 fill here ---
+The starting point of the diagram is our local setup, where we integrated the model using PyTorch Lightning, configuration files with Hydra, and scripts for training, evaluation, and data processing. When we commit the code and push it to GitHub, it automatically triggers unit tests, data statistics tests, code formatting checks, documentation generation, and the building of a training image. The diagram shows that the training image is saved in Google Cloud. We use Hydra to set hyperparameters and Weights and Biases to track and save the model during training. For the training process, we use the Compute Engine in Google Cloud, where we initialize Vertex AI using a Dockerfile. The Dockerfile retrieves the API key for Wandb from Google Cloud's Secret Manager. During training, data is loaded from a Google Cloud bucket, and predictions are saved back to the bucket. Furthermore, a user-friendly frontend is added to make predictions more accessible. This allows users to upload an image, which is sent to the model via an API key. The model returns predictions that are then displayed for the user.
 
 ### Question 30
 
