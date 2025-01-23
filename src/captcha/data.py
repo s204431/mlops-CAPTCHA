@@ -142,7 +142,7 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
     val_files = img_files[train_count : train_count + val_count]
     test_files = img_files[train_count + val_count :]
 
-    # Transform to tensor 
+    # Transform to tensor
     transform = transforms.Compose(
         [
             transforms.ToTensor(),
@@ -161,8 +161,8 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
                 labels.append(label_int)
 
         images = torch.stack(images)  # Stack to (N, C, H, W)
-        images = normalize(images)    # Normalize
-        labels = torch.tensor(labels) # Labels to tensor
+        images = normalize(images)  # Normalize
+        labels = torch.tensor(labels)  # Labels to tensor
         return images, labels
 
     # Split into datasets tensors
@@ -224,6 +224,7 @@ def preprocess() -> None:
         logger.success("\033[32m✅ Data preprocessing and DVC push complete.")
     else:
         logger.error("\033[31m❌ Data preprocessing complete but DVC push failed.")
+
 
 def main():
     """Main function. Preprocesses the data."""
