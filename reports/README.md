@@ -357,7 +357,7 @@ As seen in the ![image](figures/wandb-metrics.png) we have tracked the train acc
 For our project we developed several images: one for training, one for evaluating the model, one for the deployment backend and frontend.
 And example of how to run one of our docker files can be seen below:
 The following is a link to the evaluate docker file: <https://github.com/s204431/mlops-CAPTCHA/blob/main/dockerfiles/evaluate.dockerfile>
-You can build this dockerfile by running the following command from the root of the project: `docker build -f dockerfiles/evaluate.dockerfile . -t eval:latest?
+You can build this dockerfile by running the following command from the root of the project: `docker build -f dockerfiles/evaluate.dockerfile . -t eval:latest` command.
 You can run the docker image created by the previous command by running the following command: `docker run --name eval1 eval:latest`
 To run this dockerfiles successfully you need to have a trained model in the models folder: models/model.pth.
 
@@ -391,12 +391,12 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
-Compute Engine - For creating and running VMs
-Cloud Storage - For storing our data
-Artifact Registry - For storing model artifacts
-Cloud Build - For automatically building docker images
-Vertex AI - For training our model in the cloud
-Secret Manager - For storing a WANDB API key used in relation to the training
+Compute Engine - For creating and running VMs \
+Cloud Storage - For storing our data \
+Artifact Registry - For storing model artifacts \
+Cloud Build - For automatically building docker images \
+Vertex AI - For training our model in the cloud \
+Secret Manager - For storing a WANDB API key used in relation to the training \
 Cloud Logging - For debugging cloud related bugs
 
 
