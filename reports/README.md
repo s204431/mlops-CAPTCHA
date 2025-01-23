@@ -187,7 +187,7 @@ Note that this assumes that the team member has already installed python version
 >
 > Answer:
 
-We used the original cookie cutter template suggested in the exercises for the course. The only folder that we have not used from that template is the notebooks folder. Otherwise every folder that was in the original template was used. 
+We used the original cookie cutter template suggested in the exercises for the course. The only folder that we have not used from that template is the notebooks folder. Otherwise every folder that was in the original template was used.
 Additional folders have been added with time when it seemed fitting. This mostly includes folders for experiment logging: WANDB logging was saved in the wandb/ folder, torch lightning logging was saved in both the lightning_logs/ folder and the outputs/ folder and hydra logging was saved in the outputs/ folder.
 Otherwise, the overall structure of the project stayed true to that of the original template, which means that we mostly added to the existing folders where it seemed the most fitting.
 
