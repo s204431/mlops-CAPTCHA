@@ -187,7 +187,9 @@ Note that this assumes that the team member has already installed python version
 >
 > Answer:
 
---- question 5 fill here ---
+We used the original cookie cutter template suggested in the exercises for the course. The only folder that we have not used from that template is the notebooks folder. Otherwise every folder that was in the original template was used. 
+Additional folders have been added with time when it seemed fitting. This mostly includes folders for experiment logging: WANDB logging was saved in the wandb/ folder, torch lightning logging was saved in both the lightning_logs/ folder and the outputs/ folder and hydra logging was saved in the outputs/ folder.
+Otherwise, the overall structure of the project stayed true to that of the original template, which means that we mostly added to the existing folders where it seemed the most fitting.
 
 ### Question 6
 
@@ -389,14 +391,14 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
-Compute Engine
-Cloud Storage
-Artifact Registry
-Cloud Build
-Vertex AI
-Secret Manager (maybe?)
-Cloud Logging (maybe?)
-Not sure if we used any more services worth mentioning...
+Compute Engine - For creating and running VMs
+Cloud Storage - For storing our data
+Artifact Registry - For storing model artifacts
+Cloud Build - For automatically building docker images
+Vertex AI - For training our model in the cloud
+Secret Manager - For storing a WANDB API key used in relation to the training
+Cloud Logging - For debugging cloud related bugs
+
 
 
 ### Question 18
@@ -412,7 +414,8 @@ Not sure if we used any more services worth mentioning...
 >
 > Answer:
 
-We have used the GCP Compute Engine API to create virtual machines and among other things train our model using those virtual machines. For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
+We have used the GCP Compute Engine API to create virtual machines and train our model using those virtual machines. We have tried multiple ways of training our model on the virtual machines, one of which was just cloning the repository, installing the required dependencies on the VM and lastly running src/training.py. We have also tried running the automatically built docker image, but as there were problem getting both of the methods to work, we decided to just focus on cloning, installing and running the project.
+For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
 
 
 ### Question 19
