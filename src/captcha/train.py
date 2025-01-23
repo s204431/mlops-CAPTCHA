@@ -6,8 +6,6 @@ import subprocess
 import wandb
 import warnings
 
-warnings.filterwarnings("ignore", category=FutureWarning)
-
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
 from captcha.dataset import CaptchaDataset
@@ -20,6 +18,8 @@ from captcha.logger import logger  # Import the configured Loguru logger
 from omegaconf import DictConfig
 from typing import Tuple
 from dotenv import load_dotenv
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 def get_config_path() -> str:
