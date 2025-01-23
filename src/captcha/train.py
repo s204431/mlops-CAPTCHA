@@ -6,8 +6,6 @@ import subprocess
 import wandb
 import warnings
 
-warnings.filterwarnings("ignore", category=FutureWarning)
-
 # from captcha.dataloader import load_data
 from captcha.model import Resnet18
 from captcha.dataset import CaptchaDataset
@@ -21,9 +19,12 @@ from omegaconf import DictConfig
 from typing import Tuple
 from dotenv import load_dotenv
 
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+
 def get_config_path() -> str:
     """Get the configuration path for both local and Vertex AI environments."""
-    if os.getenv('AIP_MODEL_DIR') is not None:
+    if os.getenv("AIP_MODEL_DIR") is not None:
         logger.info("Running in Vertex AI environment")
         return "/configs"
     else:
@@ -33,11 +34,11 @@ def get_config_path() -> str:
 
 def get_model_save_path() -> str:
     """Get the appropriate model save path based on the environment."""
-    if os.getenv('AIP_MODEL_DIR') is not None:
-        path = os.getenv('AIP_MODEL_DIR', '/models')
+    if os.getenv("AIP_MODEL_DIR") is not None:
+        path = os.getenv("AIP_MODEL_DIR", "/models")
     else:
-        path = "/models"
-    
+        path = f"{_ROOT}/models"
+
     # Ensure directory exists
     os.makedirs(path, exist_ok=True)
     return os.path.join(path, "model.pth")
