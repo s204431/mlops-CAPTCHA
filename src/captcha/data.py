@@ -10,8 +10,9 @@ from PIL import Image
 import torchvision.transforms as transforms
 from tqdm import tqdm
 
-RAW_DATA_PATH = Path("data/raw")
-PROCESSED_DATA_PATH = Path("data/processed")
+
+RAW_DATA_PATH = Path("data/raw")  # Path where the raw dataset will be stored
+PROCESSED_DATA_PATH = Path("data/processed")  # Path where the processed data will be saved
 
 
 def push_data_to_dvc(raw_data_path: Path) -> bool:
@@ -19,7 +20,7 @@ def push_data_to_dvc(raw_data_path: Path) -> bool:
     logger.info("Starting DVC push process...")
 
     try:
-        # Try DVC add with verbose flag
+        # Add to DVC with verbose output
         logger.info("Running dvc add...")
         result = subprocess.run(["dvc", "add", str(raw_data_path), "-v"], check=True, capture_output=True, text=True)
         logger.info("DVC add complete: " + result.stdout)
@@ -28,10 +29,13 @@ def push_data_to_dvc(raw_data_path: Path) -> bool:
         dvc_file = Path("data.dvc")
         alt_dvc_file = Path(f"{raw_data_path}.dvc")
 
+        # Check if either file exists
         if dvc_file.exists():
             actual_dvc_file = dvc_file
+        # Check for alternative file
         elif alt_dvc_file.exists():
             actual_dvc_file = alt_dvc_file
+        # No DVC file found
         else:
             logger.error("DVC add completed but no .dvc file was found")
             return False
@@ -55,6 +59,7 @@ def push_data_to_dvc(raw_data_path: Path) -> bool:
         logger.success("✅ Data pushed to DVC remote.")
         return True
 
+    # Handle exceptions
     except subprocess.CalledProcessError as e:
         logger.error(f"Command failed: {e.cmd}")
         if e.stdout:
@@ -75,29 +80,32 @@ def download_extract_dataset_dvc(raw_data_path: Path) -> None:
     # Check if directory is empty
     is_empty = not raw_data_path.exists() or not any(raw_data_path.iterdir())
 
+    # If not empty, skip download
     if not is_empty:
         logger.info(f"'{raw_data_path}' is not empty. Skipping download.")
         logger.success("✅ Using existing data.")
         return
 
-    # Directory is empty - pull and extract
+    # Directory is empty - pull the raw data and extract
     logger.info("Directory is empty. Pulling and extracting data...")
     subprocess.run(["dvc", "pull", "--no-run-cache", str(raw_data_path)], check=True)
     logger.success("✅ Data pulled from GCS using DVC.")
 
+    # Extract the dataset
     logger.info("Extracting dataset...")
     for file in tqdm(raw_data_path.glob("**/*.zip"), desc="Extracting files", unit="file"):
         with ZipFile(file, "r") as zip_ref:
             zip_ref.extractall(raw_data_path)
+        # Remove the zip file
         file.unlink()
 
+    # Move all files into data/raw folder and remove the folder "Dataset"
     dataset_folder = raw_data_path / "Dataset"
     if dataset_folder.exists() and dataset_folder.is_dir():
         for item in dataset_folder.iterdir():
             target_path = raw_data_path / item.name
             item.replace(target_path)
         dataset_folder.rmdir()
-
     logger.success("\033[32m✅ Dataset extracted.")
 
 
@@ -106,6 +114,7 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
     #    with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
     output_folder.mkdir(parents=True, exist_ok=True)
 
+    # Get all image files and shuffle
     img_files = list(input_folder.glob("**/*.png"))
     random.shuffle(img_files)
     img_files = img_files[: min(subset_size, len(img_files))]
@@ -122,15 +131,18 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
     label_to_idx = {lbl: i for i, lbl in enumerate(class_names)}
 
     # Split into train/val/test
+    # Test 10%, Val 20%, Train 70%
     total_count = len(img_files)
     test_count = int(0.10 * total_count)
     val_count = int(0.20 * total_count)
     train_count = total_count - test_count - val_count
 
+    # Split the files
     train_files = img_files[:train_count]
     val_files = img_files[train_count : train_count + val_count]
     test_files = img_files[train_count + val_count :]
 
+    # Transform to tensor 
     transform = transforms.Compose(
         [
             transforms.ToTensor(),
@@ -149,8 +161,8 @@ def preprocess_raw(input_folder: Path, output_folder: Path, subset_size: int = 1
                 labels.append(label_int)
 
         images = torch.stack(images)  # Stack to (N, C, H, W)
-        images = normalize(images)
-        labels = torch.tensor(labels)  # Labels to tensor
+        images = normalize(images)    # Normalize
+        labels = torch.tensor(labels) # Labels to tensor
         return images, labels
 
     # Split into datasets tensors
@@ -202,7 +214,7 @@ def preprocess() -> None:
     """Preprocess the CAPTCHA dataset."""
     download_extract_dataset_dvc(RAW_DATA_PATH)
 
-    print(len(list(RAW_DATA_PATH.glob("**/*.png"))))
+    # Preprocess the data
     logger.info("\033[36mPreprocessing data...")
     preprocess_raw(RAW_DATA_PATH, PROCESSED_DATA_PATH, subset_size=len(list(RAW_DATA_PATH.glob("**/*.png"))))
     logger.success("\033[32m ✅Data preprocessing complete.")
@@ -212,7 +224,6 @@ def preprocess() -> None:
         logger.success("\033[32m✅ Data preprocessing and DVC push complete.")
     else:
         logger.error("\033[31m❌ Data preprocessing complete but DVC push failed.")
-
 
 def main():
     """Main function. Preprocesses the data."""
