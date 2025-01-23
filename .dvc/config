@@ -1,6 +1,14 @@
+# DVC configuration file
 [core]
+    # Specifies the default remote storage to use
     remote = storage
+    # Automatically stages files when they're added to DVC
+    # it is turned on with following command : dvc config core.autostage true
     autostage = true
+
+# Remote storage configuration named "storage"
 ['remote "storage"']
+    # Google Cloud Storage bucket URL where data will be stored
     url = gs://mlops_captcha_bucket/
+    # Enables versioning awareness for better version control
     version_aware = true
