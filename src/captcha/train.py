@@ -37,7 +37,7 @@ def get_model_save_path() -> str:
     if os.getenv("AIP_MODEL_DIR") is not None:
         path = os.getenv("AIP_MODEL_DIR", "/models")
     else:
-        path = "/models"
+        path = f"{_ROOT}/models"
 
     # Ensure directory exists
     os.makedirs(path, exist_ok=True)
