@@ -391,12 +391,12 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
-Compute Engine - For creating and running VMs
-Cloud Storage - For storing our data
-Artifact Registry - For storing model artifacts
-Cloud Build - For automatically building docker images
-Vertex AI - For training our model in the cloud
-Secret Manager - For storing a WANDB API key used in relation to the training
+Compute Engine - For creating and running VMs \
+Cloud Storage - For storing our data \
+Artifact Registry - For storing model artifacts \
+Cloud Build - For automatically building docker images \
+Vertex AI - For training our model in the cloud \
+Secret Manager - For storing a WANDB API key used in relation to the training \
 Cloud Logging - For debugging cloud related bugs
 
 
