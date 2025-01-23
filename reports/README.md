@@ -129,7 +129,7 @@ Group 68
 >
 > Answer:
 
-s204431, s195901, s243867, ..., ...
+s204431, s195901, s243867, s240466, s240577
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -414,8 +414,8 @@ Cloud Logging - For debugging cloud related bugs
 >
 > Answer:
 
-We have used the GCP Compute Engine API to create virtual machines and train our model using those virtual machines. We have tried multiple ways of training our model on the virtual machines, one of which was just cloning the repository, installing the required dependencies on the VM and lastly running src/training.py. We have also tried running the automatically built docker image, but as there were problem getting both of the methods to work, we decided to just focus on cloning, installing and running the project.
-For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
+We have used the GCP Compute Engine API to create virtual machines and train our model using those virtual machines. We have tried multiple ways of training our model on the virtual machines, one of which was just cloning the repository, installing the required dependencies on the VM and lastly running src/training.py. We have also tried running the automatically built docker image, but as there were problems getting both of the methods to work. At first, we decided to just focus on cloning, installing and running the project but after getting that to work, we had time to focus on getting Vertex AI to train using our docker images as well.
+For the virtual machine that we used to train our model, we used an instance with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
 
 
 ### Question 19
@@ -542,7 +542,7 @@ Yes, we implemented monitoring of the deployed model in the cloud. In particular
 >
 > Answer:
 
---- question 27 fill here ---
+We have been using one student's account credit and then invited the rest of the group members into the project on Google. In total, we have spent all provided credits and then needed to apply for a free trial. The total cost was 387 DKK. The largest cost was 343 DKK which was attributed to the Compute Engine. Most of the Compute Engine credits were spent by running the VM instances (cloning the repository and training in the cloud), part of the cost also goes toward forgetting to stop the VM instances. As a next, we have spent 21 DKK for the Artifact Registry and its associated cost Container Registry Vulnerability Scanning of 16 DKK. In the Artifact Registry, we have stored the Docker Image for Frontend, Backend, Monitoring and Docker image for training. Lastly, the cost was spent for Cloud Run, Cloud Storage, Networking and Vertex AI which were 2.93, 1.39, 1.05 and 0.63 respectively. Regarding the cloud, we were really happy with it, although it took us some time to get used to the workflow. We were not happy with the log errors when training the Vertex AI and building the Docker Images.
 
 ### Question 28
 
@@ -590,7 +590,9 @@ The data drifting API was added as a new service at https://monitoring-104860456
 >
 > Answer:
 
---- question 30 fill here ---
+Most of the struggles came from working in the cloud, mainly because debugging took A LOT of time. The two implementation that caused the most issues and cost the most time was building docker images automatically in the cloud and using Vertex AI and/or Compute Engine to train our model in the cloud. The main struggle with both of them was the waiting time inbetween knowing whether the bugs, that we tried to fix, were actually fixed. The waiting time could easily amount to 20-30 minutes before we got the error logs. Overall, bugs related to running or building the bloud greatly inhibited the debugging process, especially when trying to get the training to work both by using Vertex AI to train using our docker image and by cloning the repository, installing it and running the train.py.
+Otherwise some time was spent on making multiple different implementations run at the same time that otherwise would run independently of each other. An example of this is making the docker images run with WANDB keys on multiple different platforms, especially making it work in the cloud.
+Apart from those challenges, most of the development went smoothly. When encountering problems, we solved them in a reasonable time.
 
 ### Question 31
 
