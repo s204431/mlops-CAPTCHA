@@ -187,7 +187,9 @@ Note that this assumes that the team member has already installed python version
 >
 > Answer:
 
---- question 5 fill here ---
+We used the original cookie cutter template suggested in the exercises for the course. The only folder that we have not used from that template is the notebooks folder. Otherwise every folder that was in the original template was used.
+Additional folders have been added with time when it seemed fitting. This mostly includes folders for experiment logging: WANDB logging was saved in the wandb/ folder, torch lightning logging was saved in both the lightning_logs/ folder and the outputs/ folder and hydra logging was saved in the outputs/ folder.
+Otherwise, the overall structure of the project stayed true to that of the original template, which means that we mostly added to the existing folders where it seemed the most fitting.
 
 ### Question 6
 
@@ -337,7 +339,7 @@ We made use of config files. All config files related to experiments can be foun
 >
 > Answer:
 
---- question 14 fill here ---
+As seen in the ![image](figures/wandb-metrics.png) we have tracked the train accuracy and loss, validation accuracy and loss, test accuracy and loss, and the number of epochs which inform us about how well our model is preforming and if there are some issues like overfitting/underfitting in our experiments. The used loss is the train, validation and test are the cross-entropy loss. This loss is used since we have multiple classes to predict. We want to track the loss since we can keep an eye on the performance. Furthermore, we used accuracy to see how many the model predicts correctly. These metrics can also be used to investigate model performance. The first two plots show the accuracy for training and validation. We can see that it nicely converges after rising fast in the beginning which indicates that our model is training in an expected way. We seem to get an average accuracy of around 55% after ten epochs which is acceptable for this task but could be improved upon. The next two graphs show the loss for train and test and here we can also see how it nicely converges to around 1.5, also in an expected way. Those plots already tell us that the models seem to behave normally. Lastly, we have the test accuracy and loss of the past ten experiments. Here we then see how the model has performed in the past experiments and can compare the current experiment to the past ones. This can be used to see if the model is improving or not.
 
 ### Question 15
 
@@ -389,14 +391,14 @@ Each group member had their own way of debugging the code. Some used the built-i
 >
 > Answer:
 
-Compute Engine
-Cloud Storage
-Artifact Registry
-Cloud Build
-Vertex AI
-Secret Manager (maybe?)
-Cloud Logging (maybe?)
-Not sure if we used any more services worth mentioning...
+Compute Engine - For creating and running VMs
+Cloud Storage - For storing our data
+Artifact Registry - For storing model artifacts
+Cloud Build - For automatically building docker images
+Vertex AI - For training our model in the cloud
+Secret Manager - For storing a WANDB API key used in relation to the training
+Cloud Logging - For debugging cloud related bugs
+
 
 
 ### Question 18
@@ -412,7 +414,8 @@ Not sure if we used any more services worth mentioning...
 >
 > Answer:
 
-We have used the GCP Compute Engine API to create virtual machines and among other things train our model using those virtual machines. For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
+We have used the GCP Compute Engine API to create virtual machines and train our model using those virtual machines. We have tried multiple ways of training our model on the virtual machines, one of which was just cloning the repository, installing the required dependencies on the VM and lastly running src/training.py. We have also tried running the automatically built docker image, but as there were problem getting both of the methods to work, we decided to just focus on cloning, installing and running the project.
+For the virtual machine that we used to train our model, we used an instances with the following hardware: n1-standard-4 (machine type), Intel Haswell (CPU platform), europe-west1-b (Zone)
 
 
 ### Question 19
