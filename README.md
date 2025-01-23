@@ -13,66 +13,106 @@ Here’s an example of a CAPTCHA image from our dataset:
 
 For now the data was loaded manually, using less than one gigabyte, but we will later implement the downloading process in the [data.py](src/captcha/data.py) and save the data using version control. We plan to start by randomly sampling 10.000 images at the start of development. We will then consider training on the entire dataset later on.
 
-
-## Model
-Here we talk about our model that we use.
-
-## Frameworks and Tools (maybe)
-Here we list the frameworks and tools that we use and maybe explain some important ones.
-
-## Setup and installation (important)
-Here we describe how to setup the project to reproduce our results.
-
-## Progress (maybe)
-Maybe a section to keep track of our progress.
-
-## Future steps (maybe)
-The next steps.
-
 ## Project structure
 The directory structure of the project looks like this:
 ```txt
-├── .github/                  # Github actions and dependabot
+├── .dvc/                       #DVC configuration
+│   ├── .gitignore
+│   └── config
+├── .github/                    # Github actions and dependabot
 │   ├── dependabot.yaml
 │   └── workflows/
+│       ├── cml_data.yaml
+│       ├── codecheck.yaml
+│       ├── deploy_docs.yaml
+│       ├── pre_commit.yaml
+│       ├── stage_model.yaml
 │       └── tests.yaml
-├── configs/                  # Configuration files
-├── data/                     # Data directory
-│   ├── processed
-│   └── raw
-├── dockerfiles/              # Dockerfiles
-│   ├── api.Dockerfile
-│   └── train.Dockerfile
-├── docs/                     # Documentation
+├── configs/                    # Configuration files
+│   ├── gcloud/
+│   │   ├── config_cpu.yaml
+│   │   └── config_gpu.yaml
+│   ├── model/
+│   │   └── model.yaml
+│   ├── optimizer/
+│   │   ├── Adam_opt.yaml
+│   │   └── Adam_opt_sweep.yaml
+│   ├── config.yaml
+│   └── default_config.yaml
+├── dockerfiles/                # Dockerfiles
+│   ├── backend.dockerfile
+│   ├── evaluate.dockerfile
+│   ├── frontend.dockerfile
+│   ├── monitoring.dockerfile
+│   └── train.dockerfile
+├── docs/                       # Documentation
 │   ├── mkdocs.yml
+│   ├── README.md
 │   └── source/
-│       └── index.md
-├── models/                   # Trained models
-├── notebooks/                # Jupyter notebooks
-├── reports/                  # Reports
+│       ├── backend_monitoring.md
+│       ├── bentoml_service.md
+│       ├── data.md
+│       ├── dataset.md
+│       ├── evaluate.md
+│       ├── index.md
+│       ├── model.md
+│       ├── train.md
+│       └── utils.md
+├── models/                     # Trained models
+│   └── model_fully_trained.pth # Example of a fully trained model
+├── notebooks/                  # Jupyter notebooks
+├── reports/                    # Reports
+│   ├── README.md
+│   ├── report.py
 │   └── figures/
-├── src/                      # Source code
-│   ├── project_name/
+├── src/                        # Source code
+│   ├── captcha/
 │   │   ├── __init__.py
-│   │   ├── api.py
+│   │   ├── backend_monitoring.py
+│   │   ├── bentoml_client.py
+│   │   ├── bentoml_service.py
 │   │   ├── data.py
+│   │   ├── dataset.py
 │   │   ├── evaluate.py
-│   │   ├── models.py
+│   │   ├── frontend.py
+│   │   ├── logger.py
+│   │   ├── model.py
+│   │   ├── onnx_export.py
 │   │   ├── train.py
-│   │   └── visualize.py
-└── tests/                    # Tests
-│   ├── __init__.py
-│   ├── test_api.py
-│   ├── test_data.py
-│   └── test_model.py
+│   │   └── utils.py
+├── tests/                    # Tests
+│   ├── integrationtests/
+│   │   └── test_api.py
+│   ├── performancetests/
+│   │   ├── locustfile_backend.py
+│   │   ├── locustfile_frontend.py
+│   │   └── test_model.py
+│   ├── test_images/
+│   └── unittests/
+│       ├── __init__.py
+│       ├── test_data.py
+│       ├── test_dataset.py
+│       ├── test_model.py
+│       └── test_train.py
+├── .dockerignore
+├── .dvcignore
+├── .gcloudignore
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── LICENSE
-├── pyproject.toml            # Python project file
 ├── README.md                 # Project README
+├── backend_monitoring.yaml
+├── cloudbuild.yaml
+├── config.yaml
+├── data.dvc
+├── link_model.py
+├── pyproject.toml            # Python project file
 ├── requirements.txt          # Project requirements
+├── requirements_backend.txt  # Backend requirements
 ├── requirements_dev.txt      # Development requirements
-└── tasks.py                  # Project tasks
+├── requirements_frontend.txt # Frontend requirements
+├── tasks.py                  # Project tasks
+└── vertex_ai_train.yaml
 ```
 
 
