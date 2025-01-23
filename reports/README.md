@@ -337,7 +337,7 @@ We made use of config files. All config files related to experiments can be foun
 >
 > Answer:
 
---- question 14 fill here ---
+As seen in the [image](figures/wandb-metrics.png) we have tracked the train accuracy and loss, validation accuracy and loss, test accuracy and loss, and the number of epochs which inform us about how well our model is preforming and if there are some issues like overfitting/underfitting in our experiments. The used loss is the train, validation and test are the cross-entropy loss. This loss is used since we have multiple classes to predict. We want to track the loss since we can keep an eye on the performance. Furthermore, we used accuracy to see how many the model predicts correctly. These metrics can also be used to investigate model performance. The first two plots show the accuracy for training and validation. We can see that it nicely converges after rising fast in the beginning which indicates that our model is training in an expected way. We seem to get an average accuracy of around 55% after ten epochs which is acceptable for this task but could be improved upon. The next two graphs show the loss for train and test and here we can also see how it nicely converges to around 1.5, also in an expected way. Those plots already tell us that the models seem to behave normally. Lastly, we have the test accuracy and loss of the past ten experiments. Here we then see how the model has performed in the past experiments and can compare the current experiment to the past ones. This can be used to see if the model is improving or not.
 
 ### Question 15
 
