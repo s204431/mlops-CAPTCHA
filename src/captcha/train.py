@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+
 def get_config_path() -> str:
     """Get the configuration path for both local and Vertex AI environments."""
     if os.getenv("AIP_MODEL_DIR") is not None:
