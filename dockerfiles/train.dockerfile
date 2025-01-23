@@ -27,11 +27,11 @@ COPY models/ /models/
 
 
 # Set the working directory and install dependencies
-
 RUN pip install -r requirements.txt --no-cache-dir
 RUN pip install . --no-deps --no-cache-dir
 
-
+# Set the working directory
+ENV AIP_MODEL_DIR=/path/to/model
 
 # Which file should be executed
 ENTRYPOINT ["python", "-u", "src/captcha/train.py"]
