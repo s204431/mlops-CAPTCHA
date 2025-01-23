@@ -460,7 +460,7 @@ For the virtual machine that we used to train our model, we used an instance wit
 >
 > Answer:
 
---- question 22 fill here ---
+We have been able to train both with the Compute Engine and the Vertex AI. For the Compute Engine, we have requested. Zone (Europe West), the newest Pytorch libraries. We were able to train only using CPU, as the requested GPUs were most of the time fully used. Then we logged in to the Virtual Machine via SSH, cloned our GitHub repository, created a new environment and installed all the requirements and then we called our training script to train. For the Vertex AI, we used the same cloned repository, where we first needed to build the docker image of the training script via the cloudbuild.yaml. We also needed to mount the dataset from the bucket as the DVC was not working properly within the docker file. After the docker file was cloud-built, we ran the training with the vertex_ai_train.yaml.
 
 ## Deployment
 
@@ -561,7 +561,8 @@ We have been using one student's account credit and then invited the rest of the
 > Answer:
 
 In addition to what was previously mentioned, we also implemented a frontend and data drifting. The frontend uses streamlit. It allows the user to upload any image and it will then convert this image to the correct format and send a request to the backend API. After receiving a prediction, it presents this visually to the user by showing the prediction and probabilities. The frontend can be accessed here: https://frontend-1048604560911.europe-west1.run.app \
-The data drifting API was added as a new service at https://monitoring-1048604560911.europe-west1.run.app/report. This was done using evidently. It gathers the training data and logs from inference in our bucket in the cloud.
+The data drifting API was added as a new service at https://monitoring-1048604560911.europe-west1.run.app/report. This was done using evidently. It gathers the training data and logs from inference in our bucket in the cloud.\
+We also used mkdocs for setting up documentation of our project. The documentation is published on Github Pages at https://s204431.github.io/mlops-CAPTCHA/.
 
 ### Question 29
 
