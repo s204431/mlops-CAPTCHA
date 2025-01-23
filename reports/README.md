@@ -460,7 +460,7 @@ For the virtual machine that we used to train our model, we used an instance wit
 >
 > Answer:
 
---- question 22 fill here ---
+We have been able to train both with the Compute Engine and the Vertex AI. For the Compute Engine, we have requested. Zone (Europe West), the newest Pytorch libraries. We were able to train only using CPU, as the requested GPUs were most of the time fully used. Then we logged in to the Virtual Machine via SSH, cloned our GitHub repository, created a new environment and installed all the requirements and then we called our training script to train. For the Vertex AI, we used the same cloned repository, where we first needed to build the docker image of the training script via the cloudbuild.yaml. We also needed to mount the dataset from the bucket as the DVC was not working properly within the docker file. After the docker file was cloud-built, we ran the training with the vertex_ai_train.yaml. 
 
 ## Deployment
 
