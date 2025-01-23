@@ -237,7 +237,7 @@ We implemented tests for most of the code. In total we have 14 tests for the mod
 >
 > Answer:
 
-The total code coverage of our code is ???. As code coverage only explains the percentage of the code that has been executed during the tests, we cannot trust the code to be completely error free. The reason for this being the case, is that code coverage cannot ensure that the entire functionality of the program is covered. Even though all of the code is covered by the tests, there might be some program flow that hasn't been covered or even some edge cases that should have been tested. Additionally, the output of some of the methods could be wrong even though 100% of the code is covered.
+The total code coverage of our code is 58%. As code coverage only explains the percentage of the code that has been executed during the tests, we cannot trust the code to be completely error free. The reason for this being the case, is that code coverage cannot ensure that the entire functionality of the program is covered. Even though all of the code is covered by the tests, there might be some program flow that hasn't been covered or even some edge cases that should have been tested. Additionally, the output of some of the methods could be wrong even though 100% of the code is covered.
 
 ### Question 9
 
@@ -284,8 +284,9 @@ Yes we made use of DVC for version control of our data. We have stored both the 
 >
 > Answer:
 
-We have implemented all of the the project checkmarks related to continuous integration. Unit tests related to data, dataset, model construction and/or model training can be found in the tests/unittests folder. Tests for the raw data images can be found in the tests/test_images folder. The tests folder also contains locust performance tests and integration tests for the api, but more on those later. All os the mentioned tests can be run using the `pytest tests/` command. The coverage of the tests can be found using the `coverage run -m pytest tests/` and `coverage report` commands.
-Continuous workflow files can be found in the .github/workflows folder. This folder contains workflow files for tests, pre-commit hooks, code checking, model staging and data changes. Additionally, docker images are automatically built using workflows. All triggered workflows can be seen using the following link: <https://github.com/s204431/mlops-CAPTCHA/actions>.
+We have implemented all of the the project checkmarks related to continuous integration. Unit tests related to data, dataset, model construction and/or model training can be found in the tests/unittests folder. Tests for the raw data images can be found in the tests/test_images folder. The tests folder also contains locust performance tests and integration tests for the api, but more on those in the later questions.
+All of the mentioned tests can be run using the `pytest tests/` command. The coverage of the tests can be found using the `coverage run -m pytest tests/` and `coverage report` commands. This will give a coverage report showing the coverage of each test and a summary of the coverage of all tests.
+Continuous workflow files can be found in the .github/workflows folder. This folder contains workflow files for tests, pre-commit hooks, code checking, model staging and data changes. Additionally, docker images are automatically built using workflows. All of the triggered workflows can be monitored using the following link: <https://github.com/s204431/mlops-CAPTCHA/actions>. At times during the project, some of these workflows were disabled to make sure that the free GitHub test limit is not exceeded as we have been performing a lot of commits to the main branch.
 
 ## Running code and tracking experiments
 
