@@ -7,6 +7,8 @@ from google.cloud import storage
 from torch.utils.data import Dataset
 from pathlib import Path
 
+STATE = "remote"
+
 
 def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = True) -> None:
     """Show images and target labels."""
@@ -20,9 +22,9 @@ def show_image_and_target(images: torch.Tensor, target: np.array, show: bool = T
 
 
 def dataset_statistics(datadir: str = "data/processed") -> None:
-    train_dataset = CaptchaDataset(datadir, "train")
-    val_dataset = CaptchaDataset(datadir, "validation")
-    test_dataset = CaptchaDataset(datadir, "test")
+    train_dataset = CaptchaDataset(datadir, "train", state=STATE)
+    val_dataset = CaptchaDataset(datadir, "validation", state=STATE)
+    test_dataset = CaptchaDataset(datadir, "test", state=STATE)
     class_names = np.array(torch.load(f"{datadir}/class_names.pt"))
 
     print("Train dataset:")
