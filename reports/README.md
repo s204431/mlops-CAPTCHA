@@ -622,4 +622,4 @@ Student s243867 was in charge of profiling, most of the unit tests, code coverag
 Student s240466 was in charge of setting up data version control, logging, data change workflow, data storage bucket, setting up training in the cloud and parts of report writing.\
 Student s240577 was in charge of configuration files, setting up Hydra, setting up weights and biases, hyperparameter sweeps, training the model in the cloud and parts of report writing.
 
-We have used GitHub Copilot to help with a small part of the code and debugging.
+We have used GitHub Copilot to help with a small part of the code and debugging. We have also used ChatGPT to understand the error messages in the Logs Explorer for the Image Building and Vertex AI Training.
